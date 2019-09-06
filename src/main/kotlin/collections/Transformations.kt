@@ -6,6 +6,8 @@ object TransformationsSamples {
   fun main(args: Array<String>) {
     mapping()
     zipping()
+    association()
+    flattening()
   }
 
   // операция трансформации mapping() создает новую коллецию на
@@ -36,6 +38,7 @@ object TransformationsSamples {
   // zipping() - построение пар из элементов с одинаковыми
   // позициями в обоих коллекциях
   private fun zipping() {
+    println("zipping(): ")
     val colors = listOf("red", "brown", "grey")
     val animals = listOf("fox", "bear", "wolf")
     println(colors zip animals) // инфиксная форма
@@ -52,5 +55,61 @@ object TransformationsSamples {
     // создаются две коллекции
     val numberPairs = listOf("one" to 1, "two" to 2, "three" to 3, "four" to 4)
     println(numberPairs.unzip())
+    println("-----------------------------------")
+  }
+
+  // операция ассоциации позволяет формировать отображения из
+  // элементов коллекций и определенных значений, ассоциированных
+  // с ними
+  private fun association() {
+    println("association(): ")
+    val numbers = listOf("one", "two", "three", "four")
+    // возвращаемое значение будет ключем для элемента
+    // если встречено повторяющееся значение для ключа, только эта
+    // пара останется в отображеении
+    println(numbers.associateBy { it.length })
+    var i = 0
+    val numbers2 = numbers.associateBy {
+      i++
+      it + i // возвращаемое значение будет ключем для элемента
+    }
+    println(numbers2)
+    println(numbers.associateBy {it.first().toUpperCase()})
+    // можно не только создавать ключи, но также трансформировать
+    // и сами значения
+    println(numbers.associateBy(keySelector = { it.first().toUpperCase() },
+            valueTransform = { it.length }))
+
+    /*
+     *Другим способом построения карт, в которых и ключи, и значения
+     * так или иначе производятся из элементов исходной коллекции,
+     * является функция associate (). Требуется лямбда-функция,
+     * возвращающая Pair: ключ и значение соответствующей записи
+     * для отображения. Функцию associate () следует использовать, когда
+     * производительность не является критической или она более
+     * предпочтительна, чем другие опции.
+     */
+    fun parseFullName(fullName: String): ClassForParse {
+      val list = fullName.split(" ")
+      return ClassForParse(list[0], list[1])
+    }
+    val names = listOf("Alice Adams", "Brian Brown", "Clara Campbell")
+    println(names.associate {
+      name -> parseFullName(name).let { it.name to it.lastName}
+    })
+    println("-----------------------------------")
+  }
+
+  // функции сглаживания обеспечивают доступ к элементам вложенных
+  // коллекций
+  private fun flattening() {
+    println("flattening():")
+
+    val numbersSet = listOf(setOf(1, 2, 3), setOf(4, 5, 6), setOf(1, 2))
+    // вернется список элементов из вложенных коллеций
+    println(numbersSet.flatten())
+    println("-----------------------------------")
   }
 }
+
+data class ClassForParse(val name: String, val lastName: String)
