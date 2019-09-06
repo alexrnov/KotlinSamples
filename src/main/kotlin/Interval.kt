@@ -5,6 +5,7 @@ object IntervalSample {
     alg1()
     alg2()
     alg3()
+    alg4()
   }
 
   private fun alg1() {
@@ -62,7 +63,11 @@ object IntervalSample {
   }
 
   private fun alg4() {
-
+    val map2 = mutableMapOf("key1" to "1", "key2" to "2", "key3" to "3")
+    println(map2)
+    map2.keys.retainAll(setOf("key1", "key2"))
+    println(map2)
+    println("new line")
   }
 
 }
