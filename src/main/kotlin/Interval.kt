@@ -67,8 +67,6 @@ object IntervalSample {
     println(map2)
     map2.keys.retainAll(setOf("key1", "key2"))
     println(map2)
-    println("new line")
-    println("new new line")
   }
 
 }
