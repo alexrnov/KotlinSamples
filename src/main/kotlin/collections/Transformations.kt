@@ -119,6 +119,32 @@ object TransformationsSamples {
             StringContainer(listOf("eight", "nine"))
     )
     println(containers.flatMap {it.listNumbers + "p"} )
+    println("-")
+    val list = listOf(mutableMapOf("a" to 10, "b" to 20),
+            mutableMapOf("a" to 50, "b" to 40))
+    list.forEach { println(it) }
+    println("-")
+    // значения в каждом отображении умножаются в два раза
+    list.forEach { element ->
+      element["a"] = element["a"]?.let{ it * 2 }?: 0
+      element["b"] = element["b"]?.let{ it * 2 }?: 0
+    }
+
+    list.forEach { println(it) }
+    println("-")
+    // значения в каждом отображении делятся в два раза, и
+    // сохраняются в список
+    val list2 = list.flatMap { it.values }.map { it / 2 }
+    println("list2 = $list2")
+    // трансформация списка с вложенными отображениями в новый список
+    val list3 = list.flatMap {
+      val list4 = ArrayList<String>()
+      it.forEach { k, v ->
+        list4.add("$k : $v")
+      }
+      list4
+    }
+    println("list3 = $list3")
     println("-----------------------------------")
   }
 
