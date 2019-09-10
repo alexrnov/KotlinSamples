@@ -1,3 +1,5 @@
+import java.util.stream.Collectors
+
 object IntervalSample {
 
   @JvmStatic
@@ -63,10 +65,13 @@ object IntervalSample {
   }
 
   private fun alg4() {
-    val map2 = mutableMapOf("key1" to "1", "key2" to "2", "key3" to "3")
-    println(map2)
-    map2.keys.retainAll(setOf("key1", "key2"))
-    println(map2)
+    val list = listOf(mapOf("id" to 1, "a" to 2), mapOf("id" to 1, "a" to 3),
+            mapOf("id" to 2, "a" to 4), mapOf("id" to 3, "a" to 5),
+            mapOf("id" to 3, "a" to 8))
+    val ids = list.stream().map{it["id"]}.collect(Collectors.toSet())
+    println("ids = " + ids)
+    val ids2 = list.map {it["id"]}.toSet()
+    println("ids2 = " + ids2)
   }
 
 }
