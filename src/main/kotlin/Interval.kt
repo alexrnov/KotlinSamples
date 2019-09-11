@@ -1,3 +1,4 @@
+import java.util.*
 import java.util.stream.Collectors
 
 object IntervalSample {
@@ -65,13 +66,23 @@ object IntervalSample {
   }
 
   private fun alg4() {
-    val list = listOf(mapOf("id" to 1, "a" to 2), mapOf("id" to 1, "a" to 3),
-            mapOf("id" to 2, "a" to 4), mapOf("id" to 3, "a" to 5),
-            mapOf("id" to 3, "a" to 8))
-    val ids = list.stream().map{it["id"]}.collect(Collectors.toSet())
-    println("ids = " + ids)
-    val ids2 = list.map {it["id"]}.toSet()
-    println("ids2 = " + ids2)
-  }
+    val list = mutableListOf(mutableMapOf("id" to 1, "a" to 0.0),
+            mutableMapOf("id" to 1, "a" to 0.4), mutableMapOf("id" to 1, "a" to 0.6),
+            mutableMapOf("id" to 1, "a" to 0.6), mutableMapOf("id" to 1, "a" to 0.8),
+            mutableMapOf("id" to 1, "a" to 1.0), mutableMapOf("id" to 1, "a" to 1.2),
+            mutableMapOf("id" to 1, "a" to 1.2), mutableMapOf("id" to 1, "a" to 1.4),
+            mutableMapOf("id" to 1, "a" to 1.6), mutableMapOf("id" to 1, "a" to 1.6),
+            mutableMapOf("id" to 1, "a" to 1.8), mutableMapOf("id" to 1, "a" to 2.0))
+    list.forEach { println(it) }
 
+    val list2 = list.groupBy { it["a"] }.values.filter { it.size == 2 }
+    val list3 = list2.toMutableList()
+    list3.forEach {
+      it[0]["a"] = (it[0]["a"] as Double) - 0.01
+      it[1]["a"] = (it[1]["a"] as Double) + 0.01
+    }
+    println("-------------------------")
+    Collections.replaceAll(list as List<Any>?, list2, list3)
+    list.forEach { println(it) }
+  }
 }
