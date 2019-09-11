@@ -7,6 +7,8 @@ object RetrievingCollectionPartsSamples {
   fun main(args: Array<String>) {
     slice()
     takeAndDrop()
+    chunked()
+    windowed()
   }
 
   // выборка коллекции по интервалу или набору
@@ -36,10 +38,42 @@ object RetrievingCollectionPartsSamples {
     // слово "three"
     println(numbers.takeLastWhile { it != "three"})
 
-    // взять все элементы, начиная со слова, имеющего три буквы
-    println(numbers.dropWhile {it.length == 3} )
-    // взять все элементы кроме последнего
-    println(numbers.dropLastWhile {it.contains('v')})
+    // взять все элементы, начиная со слова, имеющего четыре буквы
+    println(numbers.dropWhile {it.length != 4} )
+    // взять все элементы начиная с элемента, имеющего букву 'u' до
+    // первого элемента
+    println(numbers.dropLastWhile {!it.contains('u')})
     println("--------------------------")
   }
+
+  // chunked() из коллекции делает несколько коллекций
+  private fun chunked() {
+    println("chunked(): ")
+    val numbers = (0..13).toList()
+    println(numbers.chunked(3))
+    println(numbers.chunked(3) { it.sum()} )
+    println("--------------------------")
+  }
+
+  //  создание коллекции на основе движущегося окна
+  private fun windowed() {
+    println("windowed(): ")
+    val numbers = listOf("one", "two", "three", "four", "five")
+    println(numbers.windowed(3))
+    println("-")
+    val numbers2 = (1..10).toList()
+    println(numbers2)
+    println(numbers2.windowed(3, step = 2)) // добавить шаг окна
+    // добавить неполную коллекцию
+    println(numbers2.windowed(3, step = 2, partialWindows = true))
+    // сразу же произвести вычисления над результатом
+    println(numbers2.windowed(3) { it.sum() })
+    println("-")
+    // возвращает pair-объекты
+    println(numbers.zipWithNext())
+    // сразу же произвести вычисления над результатами
+    println(numbers.zipWithNext {s1, s2 -> s1.length > s2.length})
+    println("--------------------------")
+  }
+
 }
