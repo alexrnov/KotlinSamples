@@ -17,7 +17,7 @@ object OrderingSample {
 
   private fun comparator() {
     println("comparator(): ")
-    
+    println("new line1")
     println("------------------------")
   }
 }
