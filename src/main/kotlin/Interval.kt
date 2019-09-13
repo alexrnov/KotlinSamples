@@ -84,5 +84,8 @@ object IntervalSample {
     println("-------------------------")
     Collections.replaceAll(list as List<Any>?, list2, list3)
     list.forEach { println(it) }
+    println("text")
   }
+
+
 }
