@@ -1,2 +1,2 @@
 # KotlinSamples
-Examples of the code on Kotlin 2
+Eamples of code on Kotlin
