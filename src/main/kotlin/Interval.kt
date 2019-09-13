@@ -49,10 +49,14 @@ object IntervalSample {
 
   private fun alg3() {
     val start = 0.51
-    val end = 5.52
+    //val end = 5.52
+    val end = 1.50
     println("start = $start, end = $end")
     val interval = Math.round((end - start) * 100.0) / 100.0
+    println("interval = $interval")
+    println("ceil = " + Math.ceil(interval))
     val step = Math.round((interval / (Math.ceil(interval))) * 100.0) / 100.0
+    println("step = $step")
     val list = ArrayList<Double>()
     var i = start
     while (i <= step * Math.ceil(interval) + start) {
@@ -84,5 +88,6 @@ object IntervalSample {
     println("-------------------------")
     Collections.replaceAll(list as List<Any>?, list2, list3)
     list.forEach { println(it) }
+    println("text")
   }
 }
