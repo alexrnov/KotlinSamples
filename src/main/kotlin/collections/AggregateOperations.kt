@@ -67,6 +67,25 @@ object AggregateOperationsSamples {
     }
     println("sumDouble = $sumDouble")
 
+    println("-")
+    // аналогичная функции reduce(), только перебор элементов
+    // осуществляется в обратном порядке. При этом element и sum
+    // меняются местами
+    val reduceRight = numbers.reduceRight { element, sumR1 ->
+      println("sum = $sumR1 element = $element sum = ${sumR1 + element}")
+      sumR1 + element
+    }
+    println("reduceRight = $reduceRight")
+    println("-")
+
+    // аналогичная функции fold(), только перебор элементов
+    // осуществляется в обратном порядке. При этом element и sum
+    // меняются местами
+    val sumDoubledRight = numbers.foldRight(0) { element, sumR2 ->
+      println("sum = $sumR2 element * 2 = ${element * 2} sum2 = ${sumR2 + element * 2}")
+      sumR2 + element * 2
+    }
+    println("sumDoubledRight = $sumDoubledRight")
     println("----------------------------")
   }
 }
