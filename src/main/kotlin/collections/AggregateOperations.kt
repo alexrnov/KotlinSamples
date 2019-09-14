@@ -46,6 +46,7 @@ object AggregateOperationsSamples {
    */
   private fun foldAndReduce() {
     println("foldAndReduce(): ")
+    println("reduce: ")
     val numbers = listOf(5, 2, 10, 4)
     println("numbers = $numbers")
     // операция берет два аргумента, предыдущее накопленное значение
@@ -58,6 +59,7 @@ object AggregateOperationsSamples {
     }
     println("sum = $sum")
     println("-")
+    println("fold: ")
     // 0 - первоначальное накопленное значение. Первый накопленный
     // результат указывается явно, и на первом шаге накопленный
     // результатом будет результат выражения первого и второго элемента
@@ -68,6 +70,7 @@ object AggregateOperationsSamples {
     println("sumDouble = $sumDouble")
 
     println("-")
+    println("reduceRight")
     // аналогичная функции reduce(), только перебор элементов
     // осуществляется в обратном порядке. При этом element и sum
     // меняются местами
@@ -77,7 +80,7 @@ object AggregateOperationsSamples {
     }
     println("reduceRight = $reduceRight")
     println("-")
-
+    println("foldRight: ")
     // аналогичная функции fold(), только перебор элементов
     // осуществляется в обратном порядке. При этом element и sum
     // меняются местами
@@ -87,6 +90,38 @@ object AggregateOperationsSamples {
     }
     println("sumDoubledRight = $sumDoubledRight")
     println("-")
+    println("reduceIndexed: ")
+    // Использование reduce с индексами
+    println("numbers = $numbers")
+    val sumReduceIndexed = numbers.reduceIndexed { idx, sumRI, element ->
+      if (idx % 2 == 0) {
+        println("idx = $idx, sumRI = $sumRI, element = $element " +
+                "sumRI + element = ${sumRI + element}")
+        sumRI + element
+      } else {
+        println("ничего не делать, idx = $idx sumRI = $sumRI")
+        sumRI
+      }
+    }
+    println("sumReduceIndexed = $sumReduceIndexed")
+    println("-")
+    // использование fold с индексами
+    println("foldIndexes: ")
+    println("numbers = $numbers")
+    val sumFoldIndexed = numbers.foldIndexed(0) {
+      idx, sumE, element ->
+      if (idx % 2 == 0) { // если индекс четный
+        println("idx = $idx, sumE = $sumE, element = $element " +
+              "sumE + element = ${sumE + element}" )
+        sumE + element
+      } else { // если индекс нечетный, ничего не делать
+        println("ничего не делать, idx = $idx sumE = $sumE")
+        sumE
+      }
+    }
+    println("sumFoldIndexed = $sumFoldIndexed")
+    println("-")
+    println("reduceRightIndexes: ")
     println("----------------------------")
   }
 }
