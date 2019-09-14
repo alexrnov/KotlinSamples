@@ -86,6 +86,7 @@ object AggregateOperationsSamples {
       sumR2 + element * 2
     }
     println("sumDoubledRight = $sumDoubledRight")
+    println("-")
     println("----------------------------")
   }
 }
