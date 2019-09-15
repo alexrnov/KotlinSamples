@@ -60,6 +60,7 @@ object AggregateOperationsSamples {
     println("sum = $sum")
     println("-")
     println("fold: ")
+    println("numbers = $numbers")
     // 0 - первоначальное накопленное значение. Первый накопленный
     // результат указывается явно, и на первом шаге накопленный
     // результатом будет результат выражения первого и второго элемента
@@ -70,7 +71,8 @@ object AggregateOperationsSamples {
     println("sumDouble = $sumDouble")
 
     println("-")
-    println("reduceRight")
+    println("reduceRight: ")
+    println("numbers = $numbers")
     // аналогичная функции reduce(), только перебор элементов
     // осуществляется в обратном порядке. При этом element и sum
     // меняются местами
@@ -81,6 +83,7 @@ object AggregateOperationsSamples {
     println("reduceRight = $reduceRight")
     println("-")
     println("foldRight: ")
+    println("numbers = $numbers")
     // аналогичная функции fold(), только перебор элементов
     // осуществляется в обратном порядке. При этом element и sum
     // меняются местами
@@ -121,7 +124,38 @@ object AggregateOperationsSamples {
     }
     println("sumFoldIndexed = $sumFoldIndexed")
     println("-")
+    // reduce с индексами. Используется обратный порядок
+    // обработки элементов
     println("reduceRightIndexes: ")
+    println("numbers = $numbers")
+    // при использовании reduce-функий element и sum менются местами
+    val sumReduceRightIndexes = numbers.reduceRightIndexed { idx, element, sumRRI ->
+      if (idx % 2 == 0) {
+        println("idx = $idx, sumRRI = $sumRRI, element = $element " +
+                "sumRRI + element = ${sumRRI + element}" )
+        sumRRI + element
+      } else {
+        println("ничего не делать, idx = $idx sumRRI = $sumRRI")
+        sumRRI
+      }
+    }
+    println("sumReduceRightIndexes = $sumReduceRightIndexes")
+    println("-")
+    // fold с индексами. Используется обратный порядок обработки элементов
+    println("foldRightIndexed: ")
+    println("numbers = $numbers")
+    // при использовании reduce-функий element и sum менются местами
+    val sumFoldRightIndexed = numbers.foldRightIndexed(0) { idx, element, sumFR ->
+      if (idx % 2 == 0) {
+        println("idx = $idx, sumFR = $sumFR, element = $element " +
+                "sumFR + element = ${sumFR + element}" )
+        sumFR + element
+      } else {
+        println("ничего не делать, idx = $idx sumFR = $sumFR")
+        sumFR
+      }
+    }
+    println("sumFoldRightIndexed = $sumFoldRightIndexed")
     println("----------------------------")
   }
 }
