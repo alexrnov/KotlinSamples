@@ -1,6 +1,6 @@
 package collections
 
-object ListSpecificOperations {
+object ListSpecificOperationsSamples {
 
   @JvmStatic
   fun main(args: Array<String>) {
@@ -8,6 +8,7 @@ object ListSpecificOperations {
     retrievingListParts()
     findingElementPositions()
     binarySearchInSortedList()
+    comparatorBinarySearch()
   }
 
   private fun retrievingElementsByIndex() {
@@ -62,4 +63,35 @@ object ListSpecificOperations {
     println(numbers.binarySearch("two", 0, 2)) // поиск в диапазоне
     println("------------------------")
   }
+
+  // Когда элементы не являются Comparable, можно обеспечить Comparator
+  // используя бинарный поиск. Список должен быть отсортирован согласно
+  // этому компаратору в возрастающем порядке
+  private fun comparatorBinarySearch() {
+    println("comparatorBinarySearch()")
+    var productList = listOf(
+            Product("WebStorm", 4.0), // Product не является Comparable
+            Product("DotTrance", 30.0),
+            Product("AppCode", 20.0),
+            Product("ReSharper", 1.0)
+    )
+    // сначала коллекцию нужно отсортирвать в соответствии с компаратором
+    // по которому будет осуществлятся бинарный поиск
+    productList = productList.sortedWith(
+            compareBy<Product> {it.price}.thenBy {it.name})
+
+    println(productList.binarySearch(Product("AppCode", 20.0),
+            compareBy<Product> {it.price}.thenBy {it.name}))
+    println("-")
+    // пользовательские компараторы также удобны, когда в коллекции
+    // используется порядок, отличный от естественного, например,
+    // порядок элементов String без учета регистра.
+    val colors = listOf("Blue", "green", "ORANGE", "Red", "yellow")
+    // сортировать без учета регистра
+    println(colors.binarySearch("RED", String.CASE_INSENSITIVE_ORDER))
+    println("------------------------")
+  }
+
+  data class Product(val name: String, val price: Double)
+
 }
