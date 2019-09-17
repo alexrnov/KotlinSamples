@@ -16,7 +16,7 @@ object ListSpecificOperationsSamples {
     adding()
     updating()
     removing()
-    sorting()
+    sortingForMutableLists()
   }
 
   private fun retrievingElementsByIndex() {
@@ -85,8 +85,8 @@ object ListSpecificOperationsSamples {
     )
     // сначала коллекцию нужно отсортирвать в соответствии с компаратором
     // по которому будет осуществлятся бинарный поиск
-    productList = productList.sortedWith(
-            compareBy<Product> {it.price}.thenBy {it.name})
+    productList = productList.sortedWith(compareBy<Product> {it.price}.thenBy {it.name})
+    productList.forEach {println(it)}
 
     println(productList.binarySearch(Product("AppCode", 20.0),
             compareBy<Product> {it.price}.thenBy {it.name}))
@@ -106,7 +106,7 @@ object ListSpecificOperationsSamples {
     println("comparisionBinarySearch()")
     fun priceComparison(product: Product, price: Double) = sign(product.price - price).toInt()
 
-    var productList = listOf(
+    var productList =listOf(
             Product("WebStorm", 4.0), // Product не является Comparable
             Product("DotTrance", 30.0),
             Product("AppCode", 20.0),
@@ -115,6 +115,7 @@ object ListSpecificOperationsSamples {
 
     // сначала коллекцию нужно отсортирвать в соответствии с comparison
     productList = productList.sortedWith(compareBy<Product> {it.price})
+    productList.forEach { println(it) }
     println(productList.binarySearch { priceComparison(it, 20.0) })
     println("------------------------")
   }
@@ -150,9 +151,16 @@ object ListSpecificOperationsSamples {
     println("------------------------")
   }
 
-  private fun sorting() {
-    println("sorting()")
-    
+  // функции для сортировки mutable-коллекций подобны функциям
+  // для сортировки коллекций только для чтения. При сортировке
+  // меняется исходная коллекция
+  private fun sortingForMutableLists() {
+    println("sortingForMutableList()")
+    val numbers = mutableListOf("one", "two", "three", "four", "five")
+    numbers.sort()
+    println(numbers)
+    numbers.sortDescending()
+    println(numbers)
     println("------------------------")
   }
 }
