@@ -152,8 +152,9 @@ object ListSpecificOperationsSamples {
   }
 
   // функции для сортировки mutable-коллекций подобны функциям
-  // для сортировки коллекций только для чтения. При сортировке
-  // меняется исходная коллекция
+  // для сортировки коллекций только для чтения. Одно из отличий
+  // заключается в том, что в названиях методов вместо sorted*
+  // используется sort*. При сортировке меняется исходная коллекция.
   private fun sortingForMutableLists() {
     println("sortingForMutableList()")
     val numbers = mutableListOf("one", "two", "three", "four", "five")
@@ -161,6 +162,26 @@ object ListSpecificOperationsSamples {
     println(numbers)
     numbers.sortDescending()
     println(numbers)
+    numbers.sortBy { it.length }
+    println(numbers)
+    numbers.sortByDescending { it.length }
+    println(numbers)
+    numbers.sortWith(compareBy<String>{it.length}.thenBy {it} )
+    println(numbers)
+    numbers.shuffle()
+    println(numbers)
+    numbers.reverse()
+    println(numbers)
+    println("-")
+    val productList = mutableListOf(
+            Product("WebStorm", 4.0), // Product не является Comparable
+            Product("DotTrance", 30.0),
+            Product("AppCode", 20.0),
+            Product("ReSharper", 1.0)
+    )
+    // sortedWith не подойдет
+    productList.sortWith(compareBy<Product> {it.price}.thenBy {it.name})
+    productList.forEach { println(it) }
     println("------------------------")
   }
 }
