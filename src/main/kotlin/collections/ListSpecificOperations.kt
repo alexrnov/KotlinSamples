@@ -1,5 +1,7 @@
 package collections
 
+import kotlin.math.sign
+
 object ListSpecificOperationsSamples {
 
   @JvmStatic
@@ -9,6 +11,12 @@ object ListSpecificOperationsSamples {
     findingElementPositions()
     binarySearchInSortedList()
     comparatorBinarySearch()
+    comparisonBinarySearch()
+    // операции записи в список
+    adding()
+    updating()
+    removing()
+    sorting()
   }
 
   private fun retrievingElementsByIndex() {
@@ -92,6 +100,61 @@ object ListSpecificOperationsSamples {
     println("------------------------")
   }
 
-  data class Product(val name: String, val price: Double)
+  // бинарный поиск с функцией сравнения поиск элементов без явных
+  // значений поиска
+  private fun comparisonBinarySearch() {
+    println("comparisionBinarySearch()")
+    fun priceComparison(product: Product, price: Double) = sign(product.price - price).toInt()
 
+    var productList = listOf(
+            Product("WebStorm", 4.0), // Product не является Comparable
+            Product("DotTrance", 30.0),
+            Product("AppCode", 20.0),
+            Product("ReSharper", 1.0)
+    )
+
+    // сначала коллекцию нужно отсортирвать в соответствии с comparison
+    productList = productList.sortedWith(compareBy<Product> {it.price})
+    println(productList.binarySearch { priceComparison(it, 20.0) })
+    println("------------------------")
+  }
+
+  private fun adding() {
+    println("adding()")
+    val numbers = mutableListOf("one", "five", "six")
+    numbers.add(1, "two")
+    numbers.addAll(2, listOf("three", "four"))
+    println(numbers)
+    println("------------------------")
+  }
+
+  private fun updating() {
+    println("updating()")
+    val numbers = mutableListOf("one", "five", "three")
+    numbers[1] = "two"
+    println(numbers)
+    numbers.set(1, "2")
+    println(numbers)
+    println("-")
+    val numbers2 = mutableListOf(1, 2, 3, 4)
+    numbers2.fill(3) // заменяет значение всех элементов
+    println(numbers2)
+    println("------------------------")
+  }
+
+  private fun removing() {
+    println("removing()")
+    val numbers = mutableListOf(1, 2, 3, 4, 3)
+    numbers.removeAt(3) // удалить элемент с индексом 3
+    println(numbers)
+    println("------------------------")
+  }
+
+  private fun sorting() {
+    println("sorting()")
+    
+    println("------------------------")
+  }
 }
+
+data class Product(val name: String, val price: Double)
