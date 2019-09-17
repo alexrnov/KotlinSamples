@@ -10,6 +10,8 @@ object OrderingSample {
     customOrders()
     reverseOrder()
     randomOrder()
+    // сортировка для mutable-коллекций приведена в классе
+    // ListSpecificOperations.kt
   }
 
   private fun comparable() {
