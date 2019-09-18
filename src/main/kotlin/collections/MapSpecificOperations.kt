@@ -74,6 +74,7 @@ object MapSpecificOperationsSamples {
     println(numbersMap)
     // добавить сразу несколько элементов
     numbersMap.putAll(setOf("four" to 4, "five" to 5))
+    numbersMap.putAll(mapOf("six" to 6, "seven" to 7))
     println(numbersMap)
     println("-")
     // переменной будет присвоено прежнее значение (1)
@@ -81,6 +82,12 @@ object MapSpecificOperationsSamples {
     println("previousValue = $previousValue")
     // а у отображения будет новое значение (11)
     println("numbersMap = $numbersMap")
+    println("-")
+    val numbersMap2 = mutableMapOf("one" to 1, "two" to 2)
+    numbersMap2["three"] = 3
+    println(numbersMap2)
+    numbersMap2 += mapOf("four" to 4, "five" to 5)
+    println(numbersMap2)
     println("--------------------")
   }
 }
