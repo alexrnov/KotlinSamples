@@ -7,7 +7,8 @@ object MapSpecificOperationsSamples {
     retrievingKeyAndValues()
     filtering()
     plusAndMinusOperators()
-    mapWriteOperations()
+    addingAndUpdatingEntries()
+    removingEntries()
   }
 
   private fun retrievingKeyAndValues() {
@@ -67,8 +68,8 @@ object MapSpecificOperationsSamples {
     println("--------------------")
   }
 
-  private fun mapWriteOperations() {
-    println("mapWriteOperations()")
+  private fun addingAndUpdatingEntries() {
+    println("addingAndUpdatingEntries()")
     val numbersMap = mutableMapOf("one" to 1, "two" to 2) // реализация LinkedHashMap()
     numbersMap.put("three", 3)
     println(numbersMap)
@@ -88,6 +89,32 @@ object MapSpecificOperationsSamples {
     println(numbersMap2)
     numbersMap2 += mapOf("four" to 4, "five" to 5)
     println(numbersMap2)
+    println("--------------------")
+  }
+
+  private fun removingEntries() {
+    println("removingEntries(): ")
+    val numbersMap = mutableMapOf("one" to 1, "two" to 2, "three" to 3)
+    println(numbersMap)
+    numbersMap.remove("one")
+    println(numbersMap)
+    numbersMap.remove("three", 4) // элемент удален не будет, так как значение другое
+    println(numbersMap)
+    println("-")
+    val numbersMap2 = mutableMapOf("one" to 1, "two" to 2, "three" to 3,
+            "threeAgain" to 3)
+    println(numbersMap2)
+    numbersMap2.keys.remove("one") // удаление по ключу
+    println(numbersMap2)
+    // удаление по значению: будет удален только первый совпавший элемент
+    numbersMap2.values.remove(3)
+    println(numbersMap2)
+    println("-")
+    val numbersMap3 = mutableMapOf("one" to 1, "two" to 2, "three" to 3)
+    numbersMap3 -= "two"
+    println(numbersMap3)
+    numbersMap3 -= "five"
+    println(numbersMap3)
     println("--------------------")
   }
 }
