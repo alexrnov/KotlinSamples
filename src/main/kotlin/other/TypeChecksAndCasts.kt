@@ -140,6 +140,20 @@ object TypeChecksAndCastsSamples {
 
   private fun uncheckedCasts() {
     println("uncheckedCasts(): ")
+    val list = listOf(1, 2, 3, 4, 5)
+    val list2 = list.asListOfType<Int>()
+    println(list2?.joinToString(prefix = "list2 ") ?: "list2 is null")
+    val list3 = list.asListOfType<Double>()
+    println(list3?.joinToString(prefix = "list3") ?: "list3 is null")
+    val list4 = list.asListOfType<String>()
+    println(list4?.joinToString(prefix = "list4") ?: "list4 is null")
+
     println("---------------")
   }
+
+  // функция расширения, приводящая элементы колекции к другому типу
+  private inline fun <reified T> List<*>.asListOfType(): List<T>? =
+    if (all { it is T})
+      @Suppress("UNCHECKED_CAST") // убрать предупреждение компилятора
+      this as List<T> else null
 }
