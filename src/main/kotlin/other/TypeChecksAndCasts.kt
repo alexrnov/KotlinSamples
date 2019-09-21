@@ -95,8 +95,43 @@ object TypeChecksAndCastsSamples {
   }
 
   private fun typeErasureAndGenericTypeChecks() {
+    fun f1(o: Any) {
+      if (o is List<*>) {
+        println(o.joinToString(separator = "|"))
+        if (o.isNotEmpty()) {
+          println("Объекты будут типизированны как Any?: ${o[0] is Any?}")
+        }
+      }
+    }
+    fun f2(map: Map<String, Int>) {
+      if (map is LinkedHashMap) { // угловые скобки можно опустить
+        println("Умное приведение к LinkedHashMap<String, Int>")
+      } else if (map is HashMap) {
+        println("Умное приведение к HashMap<String, Int>")
+      }
+    }
     println("typeErasureAndGenericTypeChecks(): ")
-
+    val list = listOf(1, 2, 3, 4, 5)
+    f1(list)
+    val map1 = HashMap<String, Int>()
+    val map2 = LinkedHashMap<String, Int>()
+    f2(map1)
+    f2(map2)
+    println("-")
+    val somePair: Pair<Any?, Any?> = "items" to listOf(1, 2, 3)
+    val stringToSomething = somePair.asPairOf<String, Any>()
+    println("stringToSomething = $stringToSomething")
+    val stringToInt = somePair.asPairOf<String, Int>()
+    println("stringToInt = $stringToInt")
+    val stringToList = somePair.asPairOf<String, List<*>>()
+    println("stringToList = $stringToList")
+    val stringToStringList = somePair.asPairOf<String, List<String>>()
+    println("stringToStringList = $stringToStringList")
     println("---------------")
+  }
+
+  private inline fun <reified A, reified B> Pair<*, *>.asPairOf(): Pair<A, B>? {
+    if (first !is A || second !is B) return null
+    return first as A to second as B
   }
 }
