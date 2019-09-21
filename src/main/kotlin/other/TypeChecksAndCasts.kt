@@ -147,7 +147,9 @@ object TypeChecksAndCastsSamples {
     println(list3?.joinToString(prefix = "list3") ?: "list3 is null")
     val list4 = list.asListOfType<String>()
     println(list4?.joinToString(prefix = "list4") ?: "list4 is null")
-
+    val list5 = listOf(TypeClassA(), TypeClassA(), TypeClassA())
+    val list6 = list5.asListOfType<TypeClassB>()
+    println(list6?.joinToString(prefix = "list6") ?: "list6 is null")
     println("---------------")
   }
 
@@ -156,4 +158,14 @@ object TypeChecksAndCastsSamples {
     if (all { it is T})
       @Suppress("UNCHECKED_CAST") // убрать предупреждение компилятора
       this as List<T> else null
+}
+open class TypeClassA {
+  override fun toString(): String {
+    return "TypeClassA"
+  }
+}
+class TypeClassB: TypeClassA() {
+  override fun toString(): String {
+    return "TypeClassB"
+  }
 }
