@@ -8,6 +8,7 @@ object TypeChecksAndCastsSamples {
     smartCast()
     unsafeCastOperator()
     typeErasureAndGenericTypeChecks()
+    uncheckedCasts()
   }
 
   private fun isOperators() {
@@ -131,7 +132,14 @@ object TypeChecksAndCastsSamples {
   }
 
   private inline fun <reified A, reified B> Pair<*, *>.asPairOf(): Pair<A, B>? {
+    // если какой-либо элемент пары не является экземпляром типа,
+    // указанного в угловых скобках, вернуть null
     if (first !is A || second !is B) return null
-    return first as A to second as B
+    return first as A to second as B // иначе - выполнить приведение типов
+  }
+
+  private fun uncheckedCasts() {
+    println("uncheckedCasts(): ")
+    println("---------------")
   }
 }
