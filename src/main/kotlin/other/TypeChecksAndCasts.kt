@@ -144,18 +144,20 @@ object TypeChecksAndCastsSamples {
     val list2 = list.asListOfType<Int>()
     println(list2?.joinToString(prefix = "list2 ") ?: "list2 is null")
     val list3 = list.asListOfType<Double>()
-    println(list3?.joinToString(prefix = "list3") ?: "list3 is null")
+    println(list3?.joinToString(prefix = "list3 ") ?: "list3 is null")
     val list4 = list.asListOfType<String>()
-    println(list4?.joinToString(prefix = "list4") ?: "list4 is null")
-    val list5 = listOf(TypeClassA(), TypeClassA(), TypeClassA())
-    val list6 = list5.asListOfType<TypeClassB>()
-    println(list6?.joinToString(prefix = "list6") ?: "list6 is null")
+    println(list4?.joinToString(prefix = "list4 ") ?: "list4 is null")
+    // TypeClassB является типом TypeClassA, поэтому элементы
+    // коллекции будут преобразованы в тип TypeClassA
+    val list5 = listOf(TypeClassB(), TypeClassB(), TypeClassB())
+    val list6 = list5.asListOfType<TypeClassA>()
+    println(list6?.joinToString(prefix = "list6 ") ?: "list6 is null")
     println("---------------")
   }
 
   // функция расширения, приводящая элементы колекции к другому типу
   private inline fun <reified T> List<*>.asListOfType(): List<T>? =
-    if (all { it is T})
+    if (all { it is T }) // если все элеемнты принадлежат типу T
       @Suppress("UNCHECKED_CAST") // убрать предупреждение компилятора
       this as List<T> else null
 }
