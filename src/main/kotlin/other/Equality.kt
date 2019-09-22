@@ -21,7 +21,7 @@ object EqualitySamples {
 
 class ClassE(val v1: String, val v2: String) {
   // переопределение метода equals
-  override operator fun equals(other: Any?): Boolean {
+  override fun equals(other: Any?): Boolean {
     if (other !is ClassE) return false
     return this.v1 == other.v1
   }
