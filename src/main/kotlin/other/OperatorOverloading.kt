@@ -82,13 +82,16 @@ operator fun Point.rem(b: Point): Point {
 operator fun Point.rangeTo(b: Point): Array<Int> {
   val n = b.x - x
   var a: Array<Int> = Array(n) { i -> i }
-  //var a2: Array<Int> = IntArray(5).toTypedArray()
   println("n = $n")
-  var a3: Array<Int> = arrayOf(n)
+  var a3: Array<Int> = IntArray(5).toTypedArray()
   println("a3 = ${a3.size}")
-  for (k in 0 until a3.size - 1) {
+  for (k in 0 until a3.size) {
     a3[k] = k
     println("a[k] = ${a[k]}")
+  }
+  for (k in a3.indices) {
+    a[k] = k
+    println("a2[k] = ${a[k]}")
   }
   return a
 }

@@ -1,11 +1,23 @@
 public class ClassLoop {
   public static void main(String[] args) {
-    int[] a = new int[5];
+    Ca[] a = new Ca[5];
     for (int i = 0; i < a.length; i++) {
-      a[i] = i;
+      a[i] = new Ca(i);
     }
-    for (int k: a) {
-      System.out.println("k = " + k);
+    for (Ca k: a) {
+      System.out.println("k = " + k.getI());
     }
+  }
+}
+
+class Ca {
+  private Integer i;
+  
+  Ca(Integer i) {
+    this.i = i;  
+  }
+  
+  public Integer getI() {
+    return this.i;
   }
 }
