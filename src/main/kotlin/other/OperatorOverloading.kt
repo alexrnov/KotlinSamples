@@ -30,13 +30,20 @@ object OperatorOverloadingSamples {
     println(".. overload for Point(0, 100)..Point(5, 40) = ")
     (Point(0, 100)..Point(5, 40)).forEach { println(it) }
     println("-")
-    val range = Point(0, 100)..Point(5, 40)
-    fun f(range: Array<Point?>) {
 
+    fun f(p: Point) {
+      val range = Point(0, 100)..Point(5, 40)
+      if (p in range) {
+        println("Объект входит в диапазон")
+      } else {
+        println("Объект не входит в диапазон")
+      }
     }
-    if (Point(-1, 500) in range) {
-      println("Объект входит в диапазон")
-    }
+    f(Point(-1, 500))
+    f(Point(0, 500))
+    f(Point(3, 500))
+    f(Point(4, 500))
+    f(Point(5, 500))
   }
 }
 
@@ -92,6 +99,8 @@ operator fun Point.rangeTo(b: Point): Array<Point?> {
   return a
 }
 
+// перегрузка для contains такая же как и для арифметических операторов
+// только аргументы a и b меняются местами (a.div(b) против b.contains(a))
 operator fun Array<Point?>.contains(a: Point): Boolean {
   return a.x >= this[0]!!.x && a.x <= this[this.size - 1]!!.x
 }
