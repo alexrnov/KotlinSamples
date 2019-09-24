@@ -27,10 +27,16 @@ object OperatorOverloadingSamples {
     println("/ overload = $point2")
     point2 %= Point(2, 3)
     println("% overload = $point2")
-    print(".. overload = ")
-    (Point(0, 100)..Point(5, 40)).forEach { print("$it ") }
-    println()
+    println(".. overload for Point(0, 100)..Point(5, 40) = ")
+    (Point(0, 100)..Point(5, 40)).forEach { println(it) }
+    println("-")
+    val range = Point(0, 100)..Point(5, 40)
+    fun f(range: Array<Point?>) {
 
+    }
+    if (Point(-1, 500) in range) {
+      println("Объект входит в диапазон")
+    }
   }
 }
 
@@ -79,23 +85,16 @@ operator fun Point.rem(b: Point): Point {
 }
 
 // перегрузка оператора a..b
-operator fun Point.rangeTo(b: Point): Array<Int> {
-  val n = b.x - x
-  var a: Array<Int> = Array(n) { i -> i }
-  println("n = $n")
-  var a3: Array<Int> = IntArray(5).toTypedArray()
-  println("a3 = ${a3.size}")
-  for (k in 0 until a3.size) {
-    a3[k] = k
-    println("a[k] = ${a[k]}")
-  }
-  for (k in a3.indices) {
-    a[k] = k
-    println("a2[k] = ${a[k]}")
-  }
-  return a3
+operator fun Point.rangeTo(b: Point): Array<Point?> {
+  val n = b.x - x // диапазон в данном случае определяется по разнице полей x
+  var a: Array<Point?> = arrayOfNulls(n)
+  for (k in 0 until a.size) a[k] = Point(k, if (k < a.size / 2) y else b.y)
+  return a
 }
 
+operator fun Array<Point?>.contains(a: Point): Boolean {
+  return a.x >= this[0]!!.x && a.x <= this[this.size - 1]!!.x
+}
 data class Point(val x: Int, val y: Int) {
 
 }
