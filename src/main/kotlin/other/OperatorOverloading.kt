@@ -93,7 +93,7 @@ operator fun Point.rangeTo(b: Point): Array<Int> {
     a[k] = k
     println("a2[k] = ${a[k]}")
   }
-  return a
+  return a3
 }
 
 data class Point(val x: Int, val y: Int) {

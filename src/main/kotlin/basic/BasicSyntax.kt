@@ -40,6 +40,19 @@ object BasicSyntaxSamples {
     val array2 = Array(5, { i -> (i * 2).toString()})
     array2.forEach { print("$it ")}
     println()
+    println("-")
+    val a: Array<Ca?> = arrayOfNulls<Ca>(5)
+    // первоначально элементы заполняются null
+    for (element in a) print("$element ")
+    println()
+    for (i in a.indices) a[i] = Ca(i) // заполнить массив инексами
+    for (k in a) print("${k!!.i} ")
+    println()
+    println("-")
+    // массив со значениями Int заполняется нулевыми значениями
+    val a2: Array<Int> = IntArray(5).toTypedArray()
+    a2.forEach { print("$it ") }
+    println()
     println("----------------------")
   }
 
@@ -321,3 +334,5 @@ object BasicSyntaxSamples {
     println("----------------------")
   }
 }
+
+class Ca(val i: Int)
