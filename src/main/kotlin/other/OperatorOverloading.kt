@@ -31,7 +31,7 @@ object OperatorOverloadingSamples {
     (Point(0, 100)..Point(5, 40)).forEach { println(it) }
     println("-")
 
-    fun f(p: Point) {
+    fun f1(p: Point) {
       val range = Point(0, 100)..Point(5, 40)
       if (p in range) {
         println("Объект входит в диапазон")
@@ -39,11 +39,22 @@ object OperatorOverloadingSamples {
         println("Объект не входит в диапазон")
       }
     }
-    f(Point(-1, 500))
-    f(Point(0, 500))
-    f(Point(3, 500))
-    f(Point(4, 500))
-    f(Point(5, 500))
+    f1(Point(-1, 500))
+    f1(Point(0, 500))
+    f1(Point(3, 500))
+    f1(Point(4, 500))
+    f1(Point(5, 500))
+    println("----------")
+    fun f2(p1: Point, p2: Point) {
+      when {
+        p1 > p2 -> println("p1 > p2")
+        p1 < p2 -> println("p1 < p2")
+        else -> println("p1 == p2")
+      }
+    }
+    f2(Point(1, 100), Point(2, 40))
+    f2(Point(10, 5), Point(5, 10))
+    f2(Point(10, 100), Point(10, 500))
   }
 }
 
@@ -94,16 +105,23 @@ operator fun Point.rem(b: Point): Point {
 // перегрузка оператора a..b
 operator fun Point.rangeTo(b: Point): Array<Point?> {
   val n = b.x - x // диапазон в данном случае определяется по разнице полей x
-  var a: Array<Point?> = arrayOfNulls(n)
+  val a: Array<Point?> = arrayOfNulls(n)
   for (k in 0 until a.size) a[k] = Point(k, if (k < a.size / 2) y else b.y)
   return a
 }
 
-// перегрузка для contains такая же как и для арифметических операторов
-// только аргументы a и b меняются местами (a.div(b) против b.contains(a))
+// перегрузка для in и !in (contains) такая же как и для
+// арифметических операторов, только аргументы a и b
+// меняются местами (a.div(b) против b.contains(a))
 operator fun Array<Point?>.contains(a: Point): Boolean {
   return a.x >= this[0]!!.x && a.x <= this[this.size - 1]!!.x
 }
-data class Point(val x: Int, val y: Int) {
 
+// перегрузка comparison-операций (>, <, >=, <=)
+operator fun Point.compareTo(b: Point): Int = when {
+    x > b.x -> 1
+    x < b.x -> -1
+    else -> 0
 }
+
+data class Point(val x: Int, val y: Int)
