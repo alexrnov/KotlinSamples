@@ -6,6 +6,9 @@ object NullSafetySamples {
     checkingForNull()
     safeCalls()
     elvisOperator()
+    exclamation()
+    safeCasts()
+    collectionsOfNullableType()
   }
 
   private fun checkingForNull() {
@@ -57,6 +60,43 @@ object NullSafetySamples {
     }
     s = f(ClassNS("s1", "s2"))
     println("s = $s")
+    println("--------------------")
+  }
+
+  private fun exclamation() {
+    println("exclamation(): ")
+    val s: String? = null
+    try {
+      // вернет ненулевое значение если s неравно null или сгенерирует
+      // NullSafetySamples exception
+      val l: Int = s!!.length
+    } catch (e: Throwable) {
+      println("NullSafetySamples error")
+    }
+    println("--------------------")
+  }
+
+  // безопасное приведение типов, позволяющее избежать ClassCastException.
+  // Если попытка приведения типов оказалась неуспешной, будет
+  // возвращено значение null
+  private fun safeCasts() {
+    println("safeCasts(): ")
+    fun f(o: Any) {
+      val l: ClassNS? = o as? ClassNS
+      println("l = $l")
+    }
+    f("")
+    f(ClassNS("s1", "s2"))
+    println("--------------------")
+
+  }
+
+  private fun collectionsOfNullableType() {
+    println("collectionsOfNullableType(): ")
+    val nullableList: List<Int?> = listOf(1, 2, 3, 4, null, 5)
+    // отфильтровать значения null
+    val intList: List<Int> = nullableList.filterNotNull()
+    println(intList)
     println("--------------------")
   }
 }
