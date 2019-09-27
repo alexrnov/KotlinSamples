@@ -8,6 +8,7 @@ object ExceptionsSamples {
   fun main(args: Array<String>) {
     throwSample()
     tryExpression()
+    nothingType()
   }
 
   private fun throwSample() {
@@ -44,4 +45,21 @@ object ExceptionsSamples {
     f2("abc")
     println("-----------------------")
   }
+
+  private fun nothingType() {
+    println("nothingType(): ")
+    val excClass = ExcClass()
+    try {
+      // элвис-выражение с throw. При этом тип throw имеет
+      // специальный тип Nothing. Этот тип не имеет значений и
+      // используется для пометки кода, которого невозможно достичь
+      val s = excClass.v1 ?: throw IllegalArgumentException("name required")
+    } catch (e: IllegalArgumentException) {
+      println(e.message)
+    }
+
+    println("-----------------------")
+  }
 }
+
+data class ExcClass(val v1: String? = null)
