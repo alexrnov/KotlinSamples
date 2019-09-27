@@ -54,10 +54,20 @@ object ExceptionsSamples {
       // специальный тип Nothing. Этот тип не имеет значений и
       // используется для пометки кода, которого невозможно достичь
       val s = excClass.v1 ?: throw IllegalArgumentException("name required")
+      println("s = $s")
     } catch (e: IllegalArgumentException) {
       println(e.message)
     }
 
+    println("-")
+    fun fail(message: String): Nothing {
+      throw IllegalArgumentException(message)
+    }
+
+    // при вызове этой функции компилятор будет знать, что
+    // выполнение не продолжается дальше вызова:
+    val s = excClass.v1 ?: fail("name required")
+    println(s) // в данный момент известно, что "s" инициализируется
     println("-----------------------")
   }
 }
