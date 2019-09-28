@@ -69,6 +69,9 @@ object ExceptionsSamples {
     val s = excClass.v1 ?: fail("name required")
     println(s) // в данный момент известно, что "s" инициализируется
     println("-----------------------")
+    // также с типом Nothing можно столкнуться при выведении типов
+    val x = null // x has type Nothing?
+    val l = listOf(null) // l has type List<Nothing?>
   }
 }
 
