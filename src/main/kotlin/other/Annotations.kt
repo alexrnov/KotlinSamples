@@ -4,15 +4,41 @@ object AnnotationsSamples {
 
   @JvmStatic
   fun main(args: Array<String>) {
+    usage()
+    constructors()
+  }
 
+  private fun usage() {
+    println("usage(): ")
+    val classAnn = ClassAnn("abs")
+    println(classAnn.f("abcde"))
+    println("----------------------")
+  }
+
+  private fun constructors() {
+    println("constructors(): ")
+    println("----------------------")
   }
 }
 
+// если нужно аннотировать первичный конструктор класса, нужно
+// добавить ключевое слово constructor при объявлении, и добавить
+// аннотацию перед ним
+@Ann1 class ClassAnn @Ann1 constructor(private val v: String) {
+
+  var x: String? = null
+    @Ann1 set // можно также аннотировать методы доступа к свойствам
+
+  @Ann1 fun f(@Ann1 p: String): Int {
+    return (@Ann1 p.length)
+  }
+}
 // определить возможные виды для аннотирования (классы, функции,
-// переменные, выражения)
+// переменные, выражения, конструкторы и т.д.)
 @Target(AnnotationTarget.CLASS, AnnotationTarget.FUNCTION,
         AnnotationTarget.VALUE_PARAMETER,
-        AnnotationTarget.EXPRESSION)
+        AnnotationTarget.EXPRESSION, AnnotationTarget.CONSTRUCTOR,
+        AnnotationTarget.PROPERTY_SETTER)
 // указывает, хранится ли аннотация в скомпилированных файлах
 // классов и является ли она видимой посредством рефлексии во
 // время выполнения (по умолчанию и то, и другое имеет значение true);
@@ -24,6 +50,7 @@ object AnnotationsSamples {
 // быть включена в сигнатуру класса или метода, показанную в
 // созданной документации API.
 @MustBeDocumented
-annotation class Fancy {
+annotation class Ann1
 
-}
+// аннотация может иметь конструктор, в который передаются параметры
+annotation class Ann2(val why: String)
