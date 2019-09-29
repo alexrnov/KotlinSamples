@@ -17,6 +17,12 @@ object AnnotationsSamples {
 
   private fun constructors() {
     println("constructors(): ")
+    // аннотация с параметром
+    @Ann2("ann2") class ClassForAn1()
+
+    // если аннотация используется в качестве параметра другой
+    // аннотации, ее имя не имеет префикс @
+    @Ann4("", ReplaceWith("")) class ClassForAn2()
     println("----------------------")
   }
 }
@@ -54,3 +60,8 @@ annotation class Ann1
 
 // аннотация может иметь конструктор, в который передаются параметры
 annotation class Ann2(val why: String)
+
+annotation class Ann3(val expression: String)
+
+annotation class Ann4(val message: String,
+                            val replaceWith: ReplaceWith = ReplaceWith(""))
