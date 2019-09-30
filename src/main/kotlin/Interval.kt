@@ -1,5 +1,4 @@
 import java.util.*
-import java.util.stream.Collectors
 
 object IntervalSample {
 
@@ -12,6 +11,7 @@ object IntervalSample {
     alg5()
     alg6()
     alg7()
+    alg8()
   }
 
   private fun alg1() {
@@ -105,7 +105,7 @@ object IntervalSample {
     val interval = Math.round((end - start) * 100.0) / 100.0
     println("interval = $interval")
     println("ceil = " + Math.ceil(interval))
-    var step = Math.round((interval / (Math.ceil(interval))) * 100.0) / 100.0
+    val step = Math.round((interval / (Math.ceil(interval))) * 100.0) / 100.0
     println("step = $step")
     val list = ArrayList<Double>()
     var i = start
@@ -136,7 +136,7 @@ object IntervalSample {
     println("interval = $interval")
     val ceil = Math.ceil(interval)
     println("ceil = $ceil")
-    var step = Math.round((interval / ceil) * 100.0) / 100.0
+    val step = Math.round((interval / ceil) * 100.0) / 100.0
     println("step = $step")
     val list = ArrayList<Double>()
     var i = start
@@ -172,7 +172,7 @@ object IntervalSample {
     println("interval = $interval")
     val ceil = Math.ceil(interval)
     println("ceil = $ceil")
-    var step = Math.round((interval / ceil) * 100.0) / 100.0
+    val step = Math.round((interval / ceil) * 100.0) / 100.0
     println("step = $step")
     val list = ArrayList<Double>()
     var i = start
@@ -186,4 +186,36 @@ object IntervalSample {
     println()
     println("--------------------------------------")
   }
+
+  private fun alg8() {
+    //val start = 61.8
+    //val end = 62.7
+    //val start = 62.8
+    //val end = 68.7
+    //val start = 62.74
+    //val end = 63.75
+    //val start = 62.74
+    //val end = 68.29
+    val start = 49.4
+    val end = 55.6
+    println("start = $start, end = $end")
+    val interval = Math.round((end - start) * 100.0) / 100.0
+    println("interval = $interval")
+    val ceil = if (interval <= 1.0) 2.0 else Math.ceil(interval)
+    println("ceil = $ceil")
+    val step = Math.round((interval / ceil) * 100.0) / 100.0
+    println("step = $step")
+    val list = ArrayList<Double>()
+    var i = start
+    list.add(i)
+    for (it in 0 until ceil.toInt()) {
+      i = Math.round((i + step) * 100.0) / 100.0
+      list.add(i)
+    }
+    list[list.lastIndex] = end
+    println(list)
+    println()
+    println("--------------------------------------")
+  }
+
 }
