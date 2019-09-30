@@ -120,29 +120,39 @@ object IntervalSample {
   }
 
   private fun alg6() {
+    //val start = 61.8
+    //val end = 62.7
     //val start = 62.8
     //val end = 68.7
     //val start = 62.74
     //val end = 63.75
-    val start = 62.74
-    val end = 68.29
+    //val start = 62.74
+    //val end = 68.29
+    val start = 49.4
+    val end = 55.6
     println("start = $start, end = $end")
     val interval = Math.round((end - start) * 100.0) / 100.0
     println("interval = $interval")
-    println("ceil = " + Math.ceil(interval))
-    var step = Math.round((interval / (Math.ceil(interval))) * 100.0) / 100.0
+    val ceil = Math.ceil(interval)
+    println("ceil = $ceil")
+    var step = Math.round((interval / ceil) * 100.0) / 100.0
     println("step = $step")
     val list = ArrayList<Double>()
     var i = start
     list.add(i)
-    while (i <= step * Math.ceil(interval) + start) {
+    var k = 0
+    while (i <= step * ceil + start) {
       i = Math.round((i + step) * 100.0) / 100.0
+      println("i = $i")
       list.add(i)
+      k++
     }
-    if (list[list.lastIndex] > end) list.removeAt(list.lastIndex)
+    println("k = $k")
+    if (k > ceil.toInt()) list.removeAt(list.lastIndex)
     list[list.lastIndex] = end
     println(list)
     println()
     println("--------------------------------------")
   }
+
 }
