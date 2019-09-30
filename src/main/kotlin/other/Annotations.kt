@@ -1,6 +1,9 @@
+@file:JvmName("Annotation samples") // аннотирование всего файла
 package other
 
+import java.lang.reflect.Field
 import kotlin.reflect.KClass
+
 
 object AnnotationsSamples {
 
@@ -54,11 +57,17 @@ object AnnotationsSamples {
   // быть создана аннотация, используйте следующий синтаксис:
   private fun useSiteTarget() {
     println("useSiteTarget(): ")
+
+    class ClassForAnn4(@field:Ann1 val foo: Field, // annotate Java field
+                       @get:Ann1 val bar: String, // annotate Java getter
+                       @param:Ann1 val quux: String) // annotate Java constructor parameter
+
     /*
-    class ClassForAnn4(@field:Ann6 val f,
-                       @get:Ann6 val bar,
-                       @param:Ann6 val quux)
-   */
+    class Example {
+      @set:[Inject VisibleForTesting]
+      var collaborator: Collaborator
+    }
+    */
     println("----------------------")
   }
 }
@@ -80,7 +89,9 @@ object AnnotationsSamples {
 @Target(AnnotationTarget.CLASS, AnnotationTarget.FUNCTION,
         AnnotationTarget.VALUE_PARAMETER,
         AnnotationTarget.EXPRESSION, AnnotationTarget.CONSTRUCTOR,
-        AnnotationTarget.PROPERTY_SETTER)
+        AnnotationTarget.PROPERTY_GETTER,
+        AnnotationTarget.PROPERTY_SETTER,
+        AnnotationTarget.FIELD)
 // указывает, хранится ли аннотация в скомпилированных файлах
 // классов и является ли она видимой посредством рефлексии во
 // время выполнения (по умолчанию и то, и другое имеет значение true);
@@ -104,7 +115,5 @@ annotation class Ann4(val message: String,
 annotation class Ann5(val arg1: KClass<*>, val arg2: KClass<out Any>)
 
 annotation class Ann6
-
-
 
 
