@@ -11,6 +11,7 @@ object IntervalSample {
     alg4()
     alg5()
     alg6()
+    alg7()
   }
 
   private fun alg1() {
@@ -155,4 +156,34 @@ object IntervalSample {
     println("--------------------------------------")
   }
 
+  private fun alg7() {
+    //val start = 61.8
+    //val end = 62.7
+    //val start = 62.8
+    //val end = 68.7
+    //val start = 62.74
+    //val end = 63.75
+    //val start = 62.74
+    //val end = 68.29
+    val start = 49.4
+    val end = 55.6
+    println("start = $start, end = $end")
+    val interval = Math.round((end - start) * 100.0) / 100.0
+    println("interval = $interval")
+    val ceil = Math.ceil(interval)
+    println("ceil = $ceil")
+    var step = Math.round((interval / ceil) * 100.0) / 100.0
+    println("step = $step")
+    val list = ArrayList<Double>()
+    var i = start
+    list.add(i)
+    for (it in 0 until ceil.toInt()) {
+      i = Math.round((i + step) * 100.0) / 100.0
+      list.add(i)
+    }
+    list[list.lastIndex] = end
+    println(list)
+    println()
+    println("--------------------------------------")
+  }
 }
