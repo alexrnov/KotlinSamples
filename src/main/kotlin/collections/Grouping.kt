@@ -9,7 +9,7 @@ object GroupingSamples {
     println(numbers.groupBy { it.first().toUpperCase()} )
     // группировка по длине слова
     val numbers2 = listOf("1", "2", "323", "4", "5", "13", "345", "43")
-    println(numbers2.groupBy{it.length})
+    println(numbers2.groupBy { it.length } )
     // группировка по первой букве в слове; дополнительно меняются
     // значения
     println(numbers.groupBy(keySelector = { it.first() },
@@ -19,7 +19,7 @@ object GroupingSamples {
     // всем группам одновременно. Группы создаются непосредственно
     // перед применением операции.
     // подсчитать количество элементов в каждой групппе
-    println(numbers.groupingBy {it.first()}.eachCount())
+    println(numbers.groupingBy { it.first() }.eachCount())
   }
 
 }

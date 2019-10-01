@@ -131,7 +131,7 @@ private fun map() {
   if ("key2" in map) println("${map["key2"]}")
   // поиск значения
   if (2 in map.values) println("Значение 2 есть в отображении")
-  // ругой вариант
+  // ручной вариант
   if (map.containsValue(2)) println("Значение 2 есть в отображении")
   println("-")
   val map2 = mapOf("key4" to 4, "key2" to 2, "key3" to 3, "key1" to 1)

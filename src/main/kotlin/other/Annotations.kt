@@ -13,6 +13,7 @@ object AnnotationsSamples {
     constructors()
     lambdas()
     useSiteTarget()
+    javaAnnotations()
   }
 
   private fun usage() {
@@ -63,11 +64,47 @@ object AnnotationsSamples {
                        @param:Ann1 val quux: String) // annotate Java constructor parameter
 
     /*
-    class Example {
-      @set:[Inject VisibleForTesting]
-      var collaborator: Collaborator
+     * Если имеется несколько аннотаций с одной и той же целью,
+     * можно избежать повторения цели, добавив скобки после цели
+     * и поместив все аннотации внутри скобок:
+     */
+    class ExampleAnnotations {
+      @set:[Ann1 Ann7]
+      var s: String = ""
     }
-    */
+
+    /* аннотирование параметр-приемник функции расширения */
+    fun @receiver:Ann7 String.myExtension() {
+      println("myExtension = ${this.length}")
+    }
+    val s = "abcdefg"
+    s.myExtension()
+
+    println("----------------------")
+  }
+
+  private fun javaAnnotations() {
+    println("javaAnnotations(): ")
+    /*
+     * Поскольку порядок параметров аннотации, написанной на Java,
+     * не определен, для передачи аргументов нельзя использовать
+     * обычный синтаксис вызова функции. Вместо этого в Kotlin
+     * необходимо использовать синтаксис именованного аргумента:
+     * // Java
+     * public @interface Ann {
+     *   int intValue();
+     *   String stringValue();
+     * }
+     */
+    @Ann8(intValue = 1, stringValue = "abc") class ClassForAnn5
+
+    // также как в java, специальный случай - использование параметра value
+    // это параметр может быть определен бе явного имени
+    //Java
+    //public @interface AnnWithValue {
+    //  String value();
+    //}
+    @Ann9("abcdef") class ClassForAnn6
     println("----------------------")
   }
 }
@@ -109,11 +146,18 @@ annotation class Ann1
 annotation class Ann2(val why: String)
 
 annotation class Ann3(val expression: String)
-annotation class Ann4(val message: String,
-                            val ann3: Ann3 = Ann3(""))
+annotation class Ann4(val message: String, val ann3: Ann3 = Ann3(""))
 
 annotation class Ann5(val arg1: KClass<*>, val arg2: KClass<out Any>)
 
 annotation class Ann6
 
+@Target(AnnotationTarget.PROPERTY_SETTER,
+              AnnotationTarget.VALUE_PARAMETER)
+@Retention(AnnotationRetention.SOURCE)
+annotation class Ann7
+
+annotation class Ann8(val intValue: Int, val stringValue: String)
+
+annotation class Ann9(val value: String)
 
