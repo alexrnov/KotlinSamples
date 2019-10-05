@@ -14,6 +14,8 @@ object AnnotationsSamples {
     lambdas()
     useSiteTarget()
     javaAnnotations()
+    arraysAsAnnotationParameters()
+    accessingPropertiesOfAnAnnotationInstance()
   }
 
   private fun usage() {
@@ -100,11 +102,52 @@ object AnnotationsSamples {
 
     // также как в java, специальный случай - использование параметра value
     // это параметр может быть определен бе явного имени
-    //Java
-    //public @interface AnnWithValue {
-    //  String value();
-    //}
+    // Java
+    // public @interface AnnWithValue {
+    //   String value();
+    // }
     @Ann9("abcdef") class ClassForAnn6
+    println("----------------------")
+  }
+
+  private fun arraysAsAnnotationParameters() {
+    println("arraysAsAnnotationParameters(): ")
+
+    // если аргумент value является массивом, в Kotlin этот параметр
+    // становится vararg
+    // java
+    // public @interface Ann10 {
+    //  String[] value();
+    // }
+    //
+    @Ann10("a", "b", "c") class ClassForAnn7
+
+    // Для других аргументов, которые имеют тип массива, нужно
+    // использовать синтаксис, как представлено ниже
+    // java
+    // public @interface Ann11 {
+    //  String[] names();
+    // }
+    // Kotlin 1.2+
+    @Ann11(names = ["a", "b", "c"]) class ClassForAnn8
+    // более старые версии
+    @Ann11(names = arrayOf("a", "b", "c")) class ClassForAnn9
+    println("----------------------")
+  }
+
+  private fun accessingPropertiesOfAnAnnotationInstance() {
+    println("accessingPropertiesOfAnAnnotationInstance(): ")
+    // значения экземпляров аннотаций представляются как свойства в Kotlin
+    // Java
+    // public @interface Ann12 {
+    //   int value();
+    // }
+    fun f(a: Ann12) {
+      val v1 = a.v1
+      val v2 = a.v2
+      println("v1 = $v1, v2 = $v2")
+    }
+    
     println("----------------------")
   }
 }
@@ -160,4 +203,10 @@ annotation class Ann7
 annotation class Ann8(val intValue: Int, val stringValue: String)
 
 annotation class Ann9(val value: String)
+
+annotation class Ann10(vararg val value: String)
+
+annotation class Ann11(val names: Array<String>)
+
+annotation class Ann12(val v1: String, val v2: String)
 
