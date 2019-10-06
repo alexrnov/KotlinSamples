@@ -7,7 +7,7 @@ object ReflectionSamples {
   @JvmStatic
   fun main(args: Array<String>) {
     classReference()
-
+    boundClassReference()
   }
 
   private fun classReference() {
@@ -18,9 +18,13 @@ object ReflectionSamples {
     // ссылки на класс Java. Чтобы получить ссылку на класс Java,
     // используйте свойство .java в экземпляре KClass
     val referenceJava: Class<ClassR1> = ClassR1::class.java
-    println("-------------")
+    println("----------------------------")
   }
 
+  private fun boundClassReference() {
+    println("boundClassReference(): ")
+    println("----------------------------")
+  }
 }
 
 class ClassR1()
