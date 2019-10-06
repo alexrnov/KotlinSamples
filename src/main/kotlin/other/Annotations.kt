@@ -147,7 +147,7 @@ object AnnotationsSamples {
       val v2 = a.v2
       println("v1 = $v1, v2 = $v2")
     }
-    
+
     println("----------------------")
   }
 }
