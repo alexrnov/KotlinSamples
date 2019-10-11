@@ -1,15 +1,21 @@
 package other
 
 import kotlin.reflect.KClass
+import kotlin.reflect.KMutableProperty0
+import kotlin.reflect.KProperty0
 
 object ReflectionSamples {
 
+  private const val valueX = 1
+  private var valueY = 2
+  
   @JvmStatic
   fun main(args: Array<String>) {
     classReference()
     boundClassReference()
     functionReferences()
     functionComposition()
+    propertyReferences()
   }
 
   private fun classReference() {
@@ -81,6 +87,30 @@ object ReflectionSamples {
     val numbers = listOf("a", "ab", "abcd", "abcde", "b", "bc", "f")
     println("слова с нечетным количеством букв: ")
     println(numbers.filter(oddLength))
+    println("----------------------------")
+  }
+
+  private fun propertyReferences() {
+    println("propertyReferences(): ")
+    // для доступа к свойствам первоклассных объектов (членов класса) 
+    // в Kotlin мы можем также использовать оператор ::
+    val vx: KProperty0<Int> = ::valueX // такой тип используется для свойст val
+    println("valueX = " + vx.get())
+    val vy: KMutableProperty0<Int> = ::valueY // такой тип используется для свойств var
+    println(vy.set(5))
+    println("valueY = " + vy.get())
+    println("valueY = $valueY")
+
+    println("-")
+    // Ссылка на свойство может использоваться там, где ожидается
+    // функция с одним параметром
+    val strs = listOf("a", "bc", "def")
+    println(strs.map { it.length} )
+    println("-")
+    // Для доступа к свойству, являющемуся членом класса, мы относим его:
+    class RA(val p: Int)
+    val prop = RA::p
+    println(prop.get(RA(1)))
     println("----------------------------")
   }
 }
