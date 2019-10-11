@@ -73,8 +73,14 @@ object ReflectionSamples {
     // compose (f, g) = f (g (*)). Теперь можно применить его к
     // вызываемым ссылкам:
     fun <A, B, C> compose(f: (B) -> C, g: (A) -> B): (A) -> C {
-      return { x -> f(g(x))}
+      return { x -> f(g(x)) }
     }
+    fun length(s: String) = s.length
+    fun isOdd(x: Int) = x % 2 != 0 // вернет true если число нечетное
+    val oddLength = compose(::isOdd, ::length)
+    val numbers = listOf("a", "ab", "abcd", "abcde", "b", "bc", "f")
+    println("слова с нечетным количеством букв: ")
+    println(numbers.filter(oddLength))
     println("----------------------------")
   }
 }
