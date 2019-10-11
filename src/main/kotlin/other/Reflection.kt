@@ -111,9 +111,15 @@ object ReflectionSamples {
     class RA(val p: Int)
     val prop = RA::p
     println(prop.get(RA(1)))
+    println("-")
+    // для расширяемых свойств
+    println(String::lastChar.get("abc"))
     println("----------------------------")
   }
 }
+
+val kotlin.String.lastChar: Char // расширяемое свойство
+  get() = this[length - 1]
 
 class ClassR1
 
