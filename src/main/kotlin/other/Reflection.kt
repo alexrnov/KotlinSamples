@@ -3,6 +3,8 @@ package other
 import kotlin.reflect.KClass
 import kotlin.reflect.KMutableProperty0
 import kotlin.reflect.KProperty0
+import kotlin.reflect.jvm.javaField
+import kotlin.reflect.jvm.javaGetter
 
 object ReflectionSamples {
 
@@ -16,6 +18,8 @@ object ReflectionSamples {
     functionReferences()
     functionComposition()
     propertyReferences()
+    interoperabilityJava()
+    constructorReference()
   }
 
   private fun classReference() {
@@ -116,6 +120,23 @@ object ReflectionSamples {
     println(String::lastChar.get("abc"))
     println("----------------------------")
   }
+
+  private fun interoperabilityJava() {
+    println("interoperabilityJava(): ")
+    println(ClassR4::x.javaGetter) // print: public final int other.ClassR4.getX()
+    println(ClassR4::x.javaField) // private final int other.ClassR4.x
+    // получение kotlin-класса, который соответсвтует java-классу
+    val classR4 = ClassR4(5)
+    val k: KClass<ClassR4> = classR4.javaClass.kotlin
+    println(k.qualifiedName)
+    println("----------------------------")
+  }
+
+  private fun constructorReference() {
+    println("constructorReference(): ")
+    
+    println("----------------------------")
+  }
 }
 
 val kotlin.String.lastChar: Char // расширяемое свойство
@@ -126,3 +147,5 @@ class ClassR1
 open class ClassR2
 
 class ClassR3: ClassR2()
+
+class ClassR4(val x: Int)
