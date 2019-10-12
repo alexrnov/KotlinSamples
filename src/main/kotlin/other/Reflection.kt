@@ -134,7 +134,7 @@ object ReflectionSamples {
 
   private fun constructorReference() {
     println("constructorReference(): ")
-    
+    functionR(::ClassR5)
     println("----------------------------")
   }
 }
@@ -149,3 +149,10 @@ open class ClassR2
 class ClassR3: ClassR2()
 
 class ClassR4(val x: Int)
+
+class ClassR5
+
+fun functionR(factory: () -> ClassR5) {
+  val x: ClassR5 = factory.invoke()
+  println("x = $x")
+}
