@@ -154,7 +154,27 @@ object ReflectionSamples {
     // выражение функционального типа:
     val strings = listOf("abc", "123456", "a70")
     println(strings.filter(numberRegex::matches))
+    println("-")
+    // Сравнение типов привязок и соответствующих несвязанных ссылок.
+    // Привязанная вызываемая ссылка имеет "прикрепленный" к нему
+    // приемник, поэтому тип приемника больше не является параметром:
+    val isNumber2: (CharSequence) -> Boolean = numberRegex::matches
+    val matches2: (Regex, CharSequence) -> Boolean = Regex::matches
+    println(isNumber2("29"))
+    println(strings.filter {it -> matches2(numberRegex, it) })
+    // Ссылка на свойство также может быть привязана:
+    val prop = "abc"::length
+    println(prop.get())
+    println("-")
+    // начиная с Kotlin 1.2 явно указывать this как приемник нет необходимости
+    // this::function2 и ::function2 эквивалентны:
+    println(this::function2.invoke())
+    println(::function2.invoke())
     println("----------------------------")
+  }
+
+  private fun function2(): String {
+    return "function2"
   }
 }
 
@@ -179,3 +199,4 @@ fun functionR(factory: () -> ClassR5) {
   val x: ClassR5 = factory.invoke()
   x.print()
 }
+
