@@ -20,6 +20,7 @@ object ReflectionSamples {
     propertyReferences()
     interoperabilityJava()
     constructorReference()
+    boundFunctionAndProperty()
   }
 
   private fun classReference() {
@@ -134,7 +135,25 @@ object ReflectionSamples {
 
   private fun constructorReference() {
     println("constructorReference(): ")
+    // вызов конструктора. Так можно вызвать конструктор без аргументов
     functionR(::ClassR5)
+    println("----------------------------")
+  }
+
+  private fun boundFunctionAndProperty() {
+    println("boundFunctionAndProperty()")
+    // регулярное выражение (d - цифровой символ 0-9, + несколько символов)
+    val numberRegex = "\\d+".toRegex()
+    println(numberRegex.matches("29"))
+    // можно сослаться на метод экземпляра определенного объекта:
+    val isNumber = numberRegex::matches
+    println(isNumber("29"))
+    // вместо прямого вызова метода выполняется сохранение ссылки на него.
+    // Такая ссылка связана со своим обработчиком. Ее можно вызвать напрямую
+    // (как в примере выше) или использовать всякий раз, когда ожидается
+    // выражение функционального типа:
+    val strings = listOf("abc", "123456", "a70")
+    println(strings.filter(numberRegex::matches))
     println("----------------------------")
   }
 }
@@ -150,9 +169,13 @@ class ClassR3: ClassR2()
 
 class ClassR4(val x: Int)
 
-class ClassR5
+class ClassR5 {
+  fun print() {
+    println("ClassR5 print()")
+  }
+}
 
 fun functionR(factory: () -> ClassR5) {
   val x: ClassR5 = factory.invoke()
-  println("x = $x")
+  x.print()
 }
