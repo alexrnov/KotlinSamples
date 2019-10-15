@@ -1,6 +1,7 @@
 package other
 
 import kotlin.reflect.KClass
+import kotlin.reflect.KFunction
 import kotlin.reflect.KMutableProperty0
 import kotlin.reflect.KProperty0
 import kotlin.reflect.jvm.javaField
@@ -21,6 +22,7 @@ object ReflectionSamples {
     interoperabilityJava()
     constructorReference()
     boundFunctionAndProperty()
+    boundConstructorReferences()
   }
 
   private fun classReference() {
@@ -176,6 +178,15 @@ object ReflectionSamples {
   private fun function2(): String {
     return "function2"
   }
+
+  private fun boundConstructorReferences() {
+    println("boundConstructorReferences(): ")
+    // Связанная вызываемая ссылка на конструктор внутреннего класса может
+    // быть получена путем предоставления экземпляра внешнего класса:
+    val outerR = OuterR()
+    val boundInner = outerR::InnerR
+    println("----------------------------")
+  }
 }
 
 val kotlin.String.lastChar: Char // расширяемое свойство
@@ -198,5 +209,11 @@ class ClassR5 {
 fun functionR(factory: () -> ClassR5) {
   val x: ClassR5 = factory.invoke()
   x.print()
+}
+
+class OuterR {
+  inner class InnerR {
+
+  }
 }
 
