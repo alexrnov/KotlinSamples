@@ -1,23 +1,38 @@
 package other
 
+import java.util.*
+
 /*
  * Стандартная библиотека Kotlin содержит несколько функций, единственной
  * целью которых является выполнение блока кода в контексте объекта. При
  * вызове такой функции для объекта с предоставленным лямбда-выражением
  * она образует временную область действия. В этой области можно получить
  * доступ к объекту без его имени. Такие функции называются функциями
- * области действия. Их пять: let, run, with, apply, and also.
+ * области. Их пять: let, run, with, apply, and also.
  */
 object ScopeFunctionsSamples {
 
   @JvmStatic
   fun main(args: Array<String>) {
     sample()
+    // так как все функции области похожи, важно понимать различия
+    // между ними. Есть два основных различия между такими функциями:
+    // - способ обращения к объекту контекста (this or it)
+    // и -возвращаемое значение
+    contextObjectThisOrIt()
+    lambdaResult()
+    // Чтобы помочь вам выбрать правильную функцию области, мы подробно
+    // опишем их и предоставим рекомендации по использованию.
+    // Технически функции во многих случаях взаимозаменяемы,
+    // поэтому в примерах показаны соглашения, определяющие общий
+    // стиль использования.
+    letExample()
+    withExample()
   }
 
   private fun sample() {
     println("sample()")
-    // типичный пример функции области действия
+    // типичный пример функции области области
     ScopeClass("Alice", 20, "Amsterdam").let {
       println(it)
       it.moveTo("London")
@@ -34,9 +49,127 @@ object ScopeFunctionsSamples {
     println(alice)
     println("-------------------------")
   }
+
+  private fun contextObjectThisOrIt() {
+    println("contextObjectThisOrIt(): ")
+    val str = "Text"
+    println("run:")
+    str.run { // this
+      println("The receiver string length: $length")
+      println("The receiver string length: ${this.length}") // делает тоже самое
+    }
+    println("let:")
+    str.let { // it
+      println("The receiver string's length is ${it.length}")
+    }
+    println("-")
+    // this (run, with, apply). Рекомендуется для лямбд, которые работают с членами объекта -
+    // присваивание свойств или вызов методов
+    val adam = ScopeClass("Adam").apply {
+      age = 30 // тоже самое, что и this.age = 30
+      this.city = "London"
+      println(code())
+    }
+    println("adam = $adam")
+    // it (let, also). Рекомендуется, когда контекстный объект используется,
+    // в основном, как аргумент в вызываемых функциях
+    fun getRandomInt(): Int {
+      return Random().nextInt(100).also {
+        writeToLog("getRandomInt() generated value $it")
+      }
+    }
+    val i = getRandomInt()
+    // дополнительно, когда вы передаете контекстный объект как аргумент,
+    // вы можете обеспечить пользоваельское имя для контекстного объекта
+    // внутри области
+    fun getRandomInt2(): Int {
+      return Random().nextInt(100).also { value ->
+        writeToLog("getRandomInt() generated value $value")
+      }
+    }
+    val i2 = getRandomInt2()
+    println("-------------------------")
+  }
+
+  private fun lambdaResult() {
+    println("lambdaResult(): ")
+    // let, run и with возвращают результат лямбды. Так, их можно использовать,
+    // когда результат присваивается переменной, в цепочке вызовов и так далее.
+    val numbers = mutableListOf("one", "two", "three")
+    val countEndsWithE = numbers.run {
+      add("four")
+      add("five")
+      count { it.endsWith("e") }
+    }
+    println("countEndsWithE = $countEndsWithE")
+    println("numbers: $numbers")
+    // Кроме того, можно игнорировать возвращаемое значение и использовать
+    // функцию области для создания временной области для переменных.
+    with(numbers) {
+      val first = first()
+      val last = last()
+      println("first item: $first, last item: $last")
+    }
+    println("-------------------------")
+  }
+
+  private fun letExample() {
+    println("letExample():")
+    // контекстный объект доступен как аргумент it. Возвращаемое значение
+    // - результат лямбды. Let() можно использовать для вызова одной или
+    // более функций на результатах цепочек вызовов:
+    val numbers = mutableListOf("one", "two", "three", "four", "five")
+    val resultList = numbers.map { it.length }.filter { it > 3 }
+    println("resultList = $resultList")
+    // с let() это можно переписать следующим образом:
+    numbers.map { it.length }.filter { it > 3 }.let {
+      println(it)
+      // если нужно, можно вызвать еще функции
+    }
+    // если кодовый блок содержит одиночную функцию с it как аргументом,
+    // можно использовать метод ссылки (::) вместо лямбды:
+    numbers.map {it.length}.filter {it > 3}.let(::println)
+    // let часто используют для для выполнения кодового блока только с
+    // non-null значениями.
+    val str: String? = "Text"
+    val length = str?.let {
+      println("let() called on $it")
+      processNonNullString(str)
+      it.length
+    }
+    println("length = $length")
+    println("-")
+    // Другим примером использования let является введение локальных
+    // переменных для улучшения читаемости кода:
+    val numbers2 = listOf("one", "two", "three", "four")
+    val modifiedFirstItem = numbers2.first().let { firstItem ->
+      println("the first item of the list is '$firstItem'")
+      if (firstItem.length >= 5) firstItem else "!$firstItem!"
+    }.toUpperCase()
+    println("modifiedFirstItem = $modifiedFirstItem")
+    println("-------------------------")
+  }
+
+  private fun withExample() {
+    println("withExample(): ")
+    // нерасширяемая функция: контекстный объект передается как аргумент,
+    // но внутри лямбды, это доступно как приемник this. Возвращаемое
+    // значение - результат лямбды. Мы рекомендуем with для вызова
+    // для вызова функций на контекстном объекте без обеспечения
+    // результата лямбды. В коде with может читаться как
+    // "с этим объектом, делать следующее"
+    val numbers = mutableListOf("one", "two", "three")
+    with(numbers) {
+      println("'with' is called with argument $this")
+      println("It contains $size elements")
+    }
+    // Другим примером использования для с является введение вспомогательного объекта, свойства или функции которого будут использоваться для вычисления значения.
+
+    println("-------------------------")
+  }
 }
 
-data class ScopeClass(val name: String, var age: Int, var city: String) {
+data class ScopeClass(val name: String, var age: Int = 0, var city: String = "") {
   fun moveTo(city: String) {
     this.city = city
   }
@@ -44,4 +177,12 @@ data class ScopeClass(val name: String, var age: Int, var city: String) {
   fun incrementAge() {
     age++
   }
+
+  fun code() = Random().nextInt()
 }
+
+fun writeToLog(message: String) {
+  println("INFO: $message")
+}
+
+fun processNonNullString(str: String) {}
