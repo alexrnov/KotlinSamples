@@ -29,6 +29,7 @@ object ScopeFunctionsSamples {
     letExample()
     withExample()
     runExample()
+    applyExample()
   }
 
   private fun sample() {
@@ -193,10 +194,27 @@ object ScopeFunctionsSamples {
       it.query(it.prepareRequest() + " to port ${it.port}")
     }
     println("result2 = $result2")
+    println("-")
     // Помимо вызова run для объекта-получателя, его можно использовать в
     // качестве функции, не связанной с расширением. Run без расширения
     // позволяет выполнить блок из нескольких операторов, где требуется
     // выражение.
+    val hexNumberRegex = run {
+      val digits = "0-9"
+      val hexDigits = "A-Fa-f"
+      val sign ="+-"
+      // ? превращает исходное максимальное совпадение в минимальное
+      // + превращает исходное минимальное совпадение в максимальное
+      Regex("[$sign]?[$digits$hexDigits]+")
+    }
+    for (match in hexNumberRegex.findAll("+1234 -FFFF not-a-number")) {
+      println(match.value)
+    }
+    println("-------------------------")
+  }
+
+  private fun applyExample() {
+    println("applyExample(): ")
     println("-------------------------")
   }
 }
