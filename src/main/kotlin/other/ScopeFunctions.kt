@@ -28,6 +28,7 @@ object ScopeFunctionsSamples {
     // стиль использования.
     letExample()
     withExample()
+    runExample()
   }
 
   private fun sample() {
@@ -163,8 +164,39 @@ object ScopeFunctionsSamples {
       println("'with' is called with argument $this")
       println("It contains $size elements")
     }
-    // Другим примером использования для с является введение вспомогательного объекта, свойства или функции которого будут использоваться для вычисления значения.
+    // Другим примером использования with является введение
+    // вспомогательного объекта, свойства или функции, который будет
+    // использоваться для вычисления значения.
+    val firstAndLast = with(numbers) {
+      "the first element is ${first()}, the last element is ${last()}"
+    }
+    println("firstAndLast = $firstAndLast")
+    println("-------------------------")
+  }
 
+  private fun runExample() {
+    println("runExample():")
+    // контекстный объект доступен как приемник (this). Возвращаемое
+    // значение - результат лямбды. Run делает тоже самое что и when,
+    // но вызывается как let - как функция расширения на контекстном объекте
+    // Используется, когда лямбда содержит как инициализацию объекта,
+    // так и вычисление возвращаемого значения.
+    val service = MultiportService("https://example.kotlinlang.org", 80)
+    val result = service.run {
+      port = 8080
+      query(prepareRequest() + " to port $port")
+    }
+    println("result = $result")
+    // тот же самый код, записанный с помощью let()
+    val result2 = service.let {
+      it.port = 80
+      it.query(it.prepareRequest() + " to port ${it.port}")
+    }
+    println("result2 = $result2")
+    // Помимо вызова run для объекта-получателя, его можно использовать в
+    // качестве функции, не связанной с расширением. Run без расширения
+    // позволяет выполнить блок из нескольких операторов, где требуется
+    // выражение.
     println("-------------------------")
   }
 }
@@ -186,3 +218,8 @@ fun writeToLog(message: String) {
 }
 
 fun processNonNullString(str: String) {}
+
+class MultiportService(var url: String, var port: Int) {
+  fun prepareRequest(): String = "Default request"
+  fun query(request: String): String = "Result for query '$request'"
+}
