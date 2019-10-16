@@ -248,18 +248,25 @@ object ScopeFunctionsSamples {
     println("-------------------------")
   }
 
-  // Функции takeIf() и TakeUnless() позволяют внедрить проверки состояния
-  // объекта в цепочки вызовов. Функция TakeUnless() противоположна takeIf()
   private fun takeIfAndTakeUnless() {
     println("takeIfAndTakeUnless(): ")
     fun f1(number: Int) {
+      // Функции takeIf() и TakeUnless() позволяют внедрить проверки состояния
+      // объекта в цепочки вызовов. Функция TakeUnless() противоположна takeIf()
       val takeIf = number.takeIf { it % 2 == 0 }
       val takeUnless = number.takeUnless { it % 2 == 0 }
       println("number: $number, takeIf: $takeIf, takeUnless: $takeUnless")
     }
     f1(4)
     f1(5)
-
+    fun f2(str: String) {
+      // когда после функций takeIf() и takeUnless() идет цепочка вызовов,
+      // нужно проверять результат на null, поскольку функции условий
+      // могут вернуть null
+      println(str.takeIf {it.isNotEmpty() }?.toUpperCase())
+    }
+    f2("abc")
+    f2("")
     println("-------------------------")
   }
 }
