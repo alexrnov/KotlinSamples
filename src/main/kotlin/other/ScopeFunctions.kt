@@ -30,6 +30,8 @@ object ScopeFunctionsSamples {
     withExample()
     runExample()
     applyExample()
+    alsoExample()
+    takeIfAndTakeUnless()
   }
 
   private fun sample() {
@@ -215,6 +217,49 @@ object ScopeFunctionsSamples {
 
   private fun applyExample() {
     println("applyExample(): ")
+    // контекстный объект доступен как объект-получатель (this),
+    // возвращаемое значение - сам объект. Используется когда не нужно
+    // возвращать значение, а только управлять членами объекта-получателя.
+    // Общий случай для apply - это конфигурация объекта. Такой вызов
+    // может быть прочитан, как: "добавить следующие присвоения объекту"
+    val adam = ScopeClass("Adam").apply {
+      age = 32
+      city = "London"
+    }
+    // Имея в качестве возвращаемого типа - объект-получатель, можно
+    // использовать его в цепочке вызовов при более сложных вычислениях
+    println("-------------------------")
+  }
+
+  private fun alsoExample() {
+    println("alsoExample(): ")
+    // контекстный объект доступен как аргумент it. Возвращаемое значение -
+    // сам объект. also хорошо подходит для некоторых действий, которые
+    // предусматривают передачу контекстного объекта в качестве аргумента.
+    // Исполбзуйте also при действиях, которые не предусматривают изменение
+    // объекта, такие как логгирование или вывод отладочной информации
+    // Обычно вы можете удалить вызовы also из цепочки вызовов без
+    // ломания программной логики. Когда вы смотрите на also в коде, вы
+    // можете прочитать: "и сделать также следующее"
+    val numbers = mutableListOf("one", "two", "three")
+    numbers
+            .also { println(it) }
+            .add("four")
+    println("-------------------------")
+  }
+
+  // Функции takeIf() и TakeUnless() позволяют внедрить проверки состояния
+  // объекта в цепочки вызовов. Функция TakeUnless() противоположна takeIf()
+  private fun takeIfAndTakeUnless() {
+    println("takeIfAndTakeUnless(): ")
+    fun f1(number: Int) {
+      val takeIf = number.takeIf { it % 2 == 0 }
+      val takeUnless = number.takeUnless { it % 2 == 0 }
+      println("number: $number, takeIf: $takeIf, takeUnless: $takeUnless")
+    }
+    f1(4)
+    f1(5)
+
     println("-------------------------")
   }
 }
