@@ -267,6 +267,27 @@ object ScopeFunctionsSamples {
     }
     f2("abc")
     f2("")
+    // функции takeIf и takeUnless() особенно полезны вместе с функциями
+    // области
+    fun f3(input: String, sub: String) {
+      input.indexOf(sub).takeIf { it >= 0}?.let {
+        println("the substring $sub is found in $input")
+        println("Its start position is $it.")
+      }
+    }
+    f3("010000011", "11")
+    f3("010000011", "12")
+    // то же самое что и функция выше, но без использования библиотечных
+    // функций
+    fun f4(input: String, sub: String) {
+      val index = input.indexOf(sub)
+      if (index >= 0) {
+        println("the substring $sub is found in $input")
+        println("Its start position is $index.")
+      }
+    }
+    f4("010000011", "11")
+    f4("010000011", "12")
     println("-------------------------")
   }
 }
