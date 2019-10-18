@@ -288,6 +288,15 @@ object ScopeFunctionsSamples {
     }
     f4("010000011", "11")
     f4("010000011", "12")
+    fun f5(taskName: String) {
+      val ageIndex = taskName.split(";;").run { this.takeIf { it.size > 1 }?.let { this[1].trim() } ?: "" }
+      println("ageIndex = '$ageIndex'")
+    }
+    f5("задача;; J1dh")
+    f5("задача;;J1dh")
+    f5("задача;;  J1dh ")
+    f5("задача;; ")
+    f5("задача;; J1dh;")
     println("-------------------------")
   }
 }
