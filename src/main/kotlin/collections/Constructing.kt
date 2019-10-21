@@ -96,6 +96,14 @@ object ConstructingSamples {
     // создать новую коллекцию на основе функции associate()
     stringList.associate { Pair(it, it.length) }
             .forEach { println("${it.key} : ${it.value}")}
+
+    println("-------------------")
+    // создание оторажения на основе двух списков
+    val listA = listOf("1", "2", "3", "4")
+    val listB = listOf("a", "b", "c", "d")
+    val b = listB.iterator()
+    val resultList = listA.associate { Pair(it, b.next()) }
+    println("resultList = $resultList")
   }
 }
 
