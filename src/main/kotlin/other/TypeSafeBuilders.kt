@@ -3,7 +3,7 @@ package other
 
 
 object TypeSafeBuildersSamples {
-  
+
   @JvmStatic
   fun main(args: Array<String>) {
 
@@ -15,6 +15,9 @@ object TypeSafeBuildersSamples {
       return html
     }
 
+    // создается новый экземпляр HTML, затем инициализируется вызов функции
+    // которая передается как аргумент (в нашем примере это приводит к вызову
+    // head и body экземпляра HTML), и затем возвращает этот экземпляр
     html {
       this.head {}
       this.body { }
@@ -25,11 +28,17 @@ object TypeSafeBuildersSamples {
 
 
 class HTML {
-  fun head(function: () -> Unit) {
-
+  fun head(init: Head.() -> Unit): Head {
+    val head = Head()
+    head.init()
+    println("head")
+    //children.add(head)
+    return head
   }
 
   fun body(function: () -> Unit) {
 
   }
 }
+
+class Head {}
