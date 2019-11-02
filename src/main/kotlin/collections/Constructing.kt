@@ -104,6 +104,15 @@ object ConstructingSamples {
     val b = listB.iterator()
     val resultList = listA.associate { Pair(it, b.next()) }
     println("resultList = $resultList")
+    println("-------------------")
+    val list3 = listA.toMutableList()
+    list3.addAll(listB)
+    list3.forEach { println(it) }
+    println("-------------------")
+    var list4 = mutableListOf("1", "2", "3")
+    val list5 = list4
+    list4 = mutableListOf("4", "5", "6") // при новом присваивании колекции List4, коллекция list5 не повреждается
+    println("list5 = $list5")
   }
 }
 
