@@ -36,9 +36,15 @@ class HTML {
     return head
   }
 
-  fun body(function: () -> Unit) {
-
+  fun body(init: Body.() -> Unit): Body {
+    val body = Body()
+    body.init()
+    println("body")
+    //children.add(body)
+    return body
   }
 }
 
 class Head {}
+
+class Body {}
