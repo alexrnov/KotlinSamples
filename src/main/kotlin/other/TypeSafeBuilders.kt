@@ -1,6 +1,5 @@
 package other
 
-val children = ArrayList<String>()
 object TypeSafeBuildersSamples {
 
   @JvmStatic
@@ -17,16 +16,19 @@ object TypeSafeBuildersSamples {
     // создается новый экземпляр HTML, затем инициализируется вызов функции
     // которая передается как аргумент (в нашем примере это приводит к вызову
     // head и body экземпляра HTML), и затем возвращает этот экземпляр
-    html {
+    val html: HTML = html {
       head {
         title { + "text"}
       }
       body {
-
+        h1 { + "text2"}
+        h1 { + "text3"}
       }
       //this.head {}
       //this.body { }
     }
+    // вывести html-структуру
+    println(html.toString())
   }
 }
 
