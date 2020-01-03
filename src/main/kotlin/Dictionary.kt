@@ -8,6 +8,7 @@ import java.io.File
 import java.io.FileInputStream
 import java.io.IOException
 import java.nio.file.Paths
+import java.util.stream.Collectors
 import java.io.File.separator as s
 
 object DictionaryMain {
@@ -18,7 +19,16 @@ object DictionaryMain {
     val path = Paths.get("D:${s}info${s}words.xls")
     println("fileName = " + path.fileName)
     val sheet = getSheetOfWebResource(path.toFile())
-    val table = getTableOfProbesWithMSD(sheet)
+    val table = getTableWithPairsOfWords(sheet)
+    table.forEach { pair ->
+        println(pair.component1() + " : " + pair.component2())
+    }
+
+    val list = ArrayList<String>()
+    table.map {e -> list.add(e.component1())}
+    val englishWords = table.stream().map {it.component1()}.collect(Collectors.toSet())
+   // englishWords.forEach { println(it) }
+
   }
 }
 
@@ -48,14 +58,15 @@ private fun getExtensionOfFile(fileName: String): String {
   return extensionOfFile.toLowerCase()
 }
 
-fun getTableOfProbesWithMSD(sheet: Sheet):
-        MutableList<MutableMap<String, String>> {
-  val table: MutableList<MutableMap<String, String>> = ArrayList()
+fun getTableWithPairsOfWords(sheet: Sheet):
+        MutableList<Pair<String, String>> {
+  val table: MutableList<Pair<String, String>> = ArrayList()
   // считать все строки листа
   var i = 0
   (0..sheet.lastRowNum).forEach { row ->
     val currentRow: Row = sheet.getRow(row)
-    println(i++)
+    val pair = getCurrentLineOfSheet(currentRow)
+    table.add(pair)
   }
   return table
 }
@@ -64,20 +75,17 @@ fun getTableOfProbesWithMSD(sheet: Sheet):
 // excel-файла, загруженного с web-ресурса. Заголовок (title)
 // - это ассоциативный массив, где в качестве ключа хранятся
 // индексы ячеек, а в качестве значений - их имена.
-private fun getCurrentLineOfSheet(row: Row, title: Map<Int, String>):
-        MutableMap<String, String> {
-  var emptyString = true
-  val map = HashMap<String, String>()
-  title.forEach { indexColumn, nameColumn ->
-    val cell: Cell? = row.getCell(indexColumn)
-    var valueCell = "Нет данных"
-    if (cell != null && cell.toString().isNotEmpty() && cell.toString() != " ") {
-      valueCell = cell.toString()
-      emptyString = false
-    }
-    map[nameColumn] = valueCell
+private fun getCurrentLineOfSheet(row: Row):
+        Pair<String, String> {
+  var pair = Pair("Нет данных", "Нет данных")
+  val cell0: Cell? = row.getCell(0)
+  val cell1: Cell? = row.getCell(1)
+  if (cell0 != null && cell0.toString().isNotEmpty() && cell0.toString() != " "
+          && cell1 != null && cell1.toString().isNotEmpty() && cell1.toString() != " ") {
+    pair = Pair(cell0.toString(), cell1.toString())
   }
-  //если пустая строка (все значения = "Нет данных"), вернуть пустой массив
-  if (emptyString) map.clear()
-  return map
+  return pair
 }
+
+
+

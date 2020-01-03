@@ -40,16 +40,16 @@ object GenericsKotlinSamples {
     val pairA = PairKotlin(classA1, classA2)
     val pairB = PairKotlin(classB1, classB2)
     val pairC = PairKotlin(classC1, classC2)
-    //передать методу f4() можно только объект Pair<ClassA>
+    //передать методу f4() можно только объект PairGeneric<ClassA>
     NormalClassKotlin.f4(pairA)
-    // передать методу f4() объект типа Pair<ClassB> нельзя, поскольку
-    // обобщенный тип Pair<ClassB> не связан отношениями наследования
-    // с классом Pair<ClassA>
+    // передать методу f4() объект типа PairGeneric<ClassB> нельзя, поскольку
+    // обобщенный тип PairGeneric<ClassB> не связан отношениями наследования
+    // с классом PairGeneric<ClassA>
     //NormalClass.f4(pairB);
-    // Методу f5() можно передать как объект обобщенного типа Pair<ClassA>,
-    // так и объект обобщенного класса Pair<ClassB>, поскольку в методе
+    // Методу f5() можно передать как объект обобщенного типа PairGeneric<ClassA>,
+    // так и объект обобщенного класса PairGeneric<ClassB>, поскольку в методе
     // используется механизм подстановочных типов, при котором
-    // и Pair<ClassA>, и Pair<ClassB> относятся к типу Pair<? extends ClassA>
+    // и PairGeneric<ClassA>, и PairGeneric<ClassB> относятся к типу PairGeneric<? extends ClassA>
     println("-----------------------------")
     NormalClassKotlin.f5(pairA)
     NormalClassKotlin.f5(pairB)
@@ -137,9 +137,9 @@ internal object NormalClassKotlin {
   }
 
   /**
-   * Передять этому методу можно отлько объект типа Pair<ClassA>, но не
-   * объект типа Pair<ClassB>, поскольку Pair<ClassA> не является
-   * суперклассом для класса Pair<ClassB>
+   * Передять этому методу можно отлько объект типа PairGeneric<ClassA>, но не
+   * объект типа PairGeneric<ClassB>, поскольку PairGeneric<ClassA> не является
+   * суперклассом для класса PairGeneric<ClassB>
    * @param pair
   </ClassB></ClassA></ClassB></ClassA> */
   fun f4(pair: PairKotlin<ClassAKotlin>) {
@@ -148,16 +148,16 @@ internal object NormalClassKotlin {
 
   /**
    * ПОДСТАНОВОЧНЫЕ ТИПЫ
-   * Можно передать как объект обобщенного типа Pair<ClassA>,
-   * так и объект обобщенного класса Pair<ClassB>, поскольку в методе
+   * Можно передать как объект обобщенного типа PairGeneric<ClassA>,
+   * так и объект обобщенного класса PairGeneric<ClassB>, поскольку в методе
    * используется механизм подстановочных типов, при котором
-   * и Pair<ClassA>, и Pair<ClassB> относятся к типу Pair
+   * и PairGeneric<ClassA>, и PairGeneric<ClassB> относятся к типу PairGeneric
    * @param pair
   </ClassB></ClassA></ClassB></ClassA> */
   fun f5(pair: PairKotlin<out ClassAKotlin>) {
     val a = pair.first
     println("f5() = ")
-    // если в качестве параметра передан объект Pair<ClassB> -
+    // если в качестве параметра передан объект PairGeneric<ClassB> -
     // будут вызваны методы класса ClassB
     a!!.method1()
     a.method2()

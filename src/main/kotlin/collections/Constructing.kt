@@ -9,7 +9,7 @@ object ConstructingSamples {
     println("Constructing from elements: ")
     val set1 = setOf("one", "two", "three", "four")
     val emptySet = mutableSetOf<String>()
-    // при таком создании отображения создаются Pair-объекты и
+    // при таком создании отображения создаются PairGeneric-объекты и
     // сбособ рекомендован, когда нет больших требований к
     // производительности
     val map1 = mapOf(1 to "One", 2 to "Two", 3 to "Three", 4 to "Four")

@@ -10,10 +10,10 @@ public class GenericsJava {
 
   public static void main(String[] args) {
 
-    Pair<String> pair1 = new Pair<>("a", "b");
-    System.out.println(pair1.getFirst() + ", " + pair1.getSecond());
-    Pair<Integer> pair2 = new Pair<>(1, 2);
-    System.out.println(pair2.getFirst() + ", " + pair2.getSecond());
+    PairGeneric<String> pairGeneric1 = new PairGeneric<>("a", "b");
+    System.out.println(pairGeneric1.getFirst() + ", " + pairGeneric1.getSecond());
+    PairGeneric<Integer> pairGeneric2 = new PairGeneric<>(1, 2);
+    System.out.println(pairGeneric2.getFirst() + ", " + pairGeneric2.getSecond());
 
     String s = NormalClass.f1("one", "two", "three", "four", "five");
     System.out.println("s = " + s);
@@ -36,48 +36,48 @@ public class GenericsJava {
     List<ClassA> list = new ArrayList<>();
     // передача объектов как массива аргументов обобщенных типов
     NormalClass.addAll(list, classA1, classA2, classB1, classB2);
-    Pair<ClassA> pairA = new Pair(classA1, classA2);
-    Pair<ClassB> pairB = new Pair(classB1, classB2);
-    Pair<ClassC> pairC = new Pair(classC1, classC2);
-    //передать методу f4() можно только объект Pair<ClassA>
-    NormalClass.f4(pairA);
-    // передать методу f4() объект типа Pair<ClassB> нельзя, поскольку
-    // обобщенный тип Pair<ClassB> не связан отношениями наследования
-    // с классом Pair<ClassA>
-    //NormalClass.f4(pairB);
-    // Методу f5() можно передать как объект обобщенного типа Pair<ClassA>,
-    // так и объект обобщенного класса Pair<ClassB>, поскольку в методе
+    PairGeneric<ClassA> pairGenericA = new PairGeneric(classA1, classA2);
+    PairGeneric<ClassB> pairGenericB = new PairGeneric(classB1, classB2);
+    PairGeneric<ClassC> pairGenericC = new PairGeneric(classC1, classC2);
+    //передать методу f4() можно только объект PairGeneric<ClassA>
+    NormalClass.f4(pairGenericA);
+    // передать методу f4() объект типа PairGeneric<ClassB> нельзя, поскольку
+    // обобщенный тип PairGeneric<ClassB> не связан отношениями наследования
+    // с классом PairGeneric<ClassA>
+    //NormalClass.f4(pairGenericB);
+    // Методу f5() можно передать как объект обобщенного типа PairGeneric<ClassA>,
+    // так и объект обобщенного класса PairGeneric<ClassB>, поскольку в методе
     // используется механизм подстановочных типов, при котором
-    // и Pair<ClassA>, и Pair<ClassB> относятся к типу Pair<? extends ClassA>
+    // и PairGeneric<ClassA>, и PairGeneric<ClassB> относятся к типу PairGeneric<? extends ClassA>
     System.out.println("-----------------------------");
-    NormalClass.f5(pairA);
-    NormalClass.f5(pairB);
+    NormalClass.f5(pairGenericA);
+    NormalClass.f5(pairGenericB);
     System.out.println("-----------------------------");
-    NormalClass.f6(pairA);
-    NormalClass.f6(pairB);
-    // запись объекта класса pairC не разрешена, поскольку pairC не
-    // является супертипом pairB
-    //NormalClass.f6(pairC);
+    NormalClass.f6(pairGenericA);
+    NormalClass.f6(pairGenericB);
+    // запись объекта класса pairGenericC не разрешена, поскольку pairGenericC не
+    // является супертипом pairGenericB
+    //NormalClass.f6(pairGenericC);
     // Меняет местами элементы пар.
     // При этом используется механизм подстановки
-    NormalClass.swap(pairA);
-    NormalClass.swap(pairB);
-    NormalClass.swap(pairC);
+    NormalClass.swap(pairGenericA);
+    NormalClass.swap(pairGenericB);
+    NormalClass.swap(pairGenericC);
   }
 
 }
 
 /** простой обобщенный класс */
-class Pair<T> {
+class PairGeneric<T> {
   private T first;
   private T second;
 
-  public Pair() {
+  public PairGeneric() {
     first = null;
     second = null;
   }
 
-  public Pair(T first, T second) {
+  public PairGeneric(T first, T second) {
     this.first = first;
     this.second = second;
   }
@@ -152,27 +152,27 @@ class NormalClass {
   }
 
   /**
-   * Передять этому методу можно отлько объект типа Pair<ClassA>, но не
-   * объект типа Pair<ClassB>, поскольку Pair<ClassA> не является
-   * суперклассом для класса Pair<ClassB>
-   * @param pair
+   * Передять этому методу можно отлько объект типа PairGeneric<ClassA>, но не
+   * объект типа PairGeneric<ClassB>, поскольку PairGeneric<ClassA> не является
+   * суперклассом для класса PairGeneric<ClassB>
+   * @param pairGeneric
    */
-  public static void f4(Pair<ClassA> pair) {
-    ClassA classA = pair.getFirst();
+  public static void f4(PairGeneric<ClassA> pairGeneric) {
+    ClassA classA = pairGeneric.getFirst();
   }
 
   /**
    * ПОДСТАНОВОЧНЫЕ ТИПЫ
-   * Можно передать как объект обобщенного типа Pair<ClassA>,
-   * так и объект обобщенного класса Pair<ClassB>, поскольку в методе
+   * Можно передать как объект обобщенного типа PairGeneric<ClassA>,
+   * так и объект обобщенного класса PairGeneric<ClassB>, поскольку в методе
    * используется механизм подстановочных типов, при котором
-   * и Pair<ClassA>, и Pair<ClassB> относятся к типу Pair<? extends ClassA>
-   * @param pair
+   * и PairGeneric<ClassA>, и PairGeneric<ClassB> относятся к типу PairGeneric<? extends ClassA>
+   * @param pairGeneric
    */
-  public static void f5(Pair<? extends ClassA> pair) {
-    ClassA a = pair.getFirst();
+  public static void f5(PairGeneric<? extends ClassA> pairGeneric) {
+    ClassA a = pairGeneric.getFirst();
     System.out.println("f5() = ");
-    // если в качестве параметра передан объект Pair<ClassB> -
+    // если в качестве параметра передан объект PairGeneric<ClassB> -
     // будут вызваны методы класса ClassB
     a.method1();
     a.method2();
@@ -188,8 +188,8 @@ class NormalClass {
     // главный смысл ограниченных подстановок. С их помощью можно
     // теперь различать безопасные методы доступа от небезопасных
     // модифицирующих методов.
-    // pair.setFirst(a2);
-    // pair.setFirst(b2);
+    // pairGeneric.setFirst(a2);
+    // pairGeneric.setFirst(b2);
   }
 
   /**
@@ -201,18 +201,18 @@ class NormalClass {
    * поведение, обратное подстановочным типам (метод f5()). В частности,
    * методам можно передавать параметры, но нельзя использовать
    * возвращаемые ими значения
-   * @param pair
+   * @param pairGeneric
    */
-  public static void f6(Pair<? super ClassB> pair) {
-    // ClassA classA = pair.getFirst(); // методы доступа не разрешены
+  public static void f6(PairGeneric<? super ClassB> pairGeneric) {
+    // ClassA classA = pairGeneric.getFirst(); // методы доступа не разрешены
     ClassB classB = new ClassB(); // модифицирующие методы разрешены
-    pair.setFirst(classB);
+    pairGeneric.setFirst(classB);
     ClassC classC = new ClassC();
-    pair.setFirst(classC);
+    pairGeneric.setFirst(classC);
     // модифицирующий метод для суперкласса (только ClassA)
     // не разрешен. Не понял почему.
     ClassA classA = new ClassA();
-    //pair.setFirst(classA);
+    //pairGeneric.setFirst(classA);
   }
 
   /**
@@ -220,20 +220,20 @@ class NormalClass {
    * для выполнения очень простых операций. Например метод проверяет,
    * содержит ли пара пустую ссылку на объект. Такому методу вообще
    * не требуется конкретный тип.
-   * @param pair
+   * @param pairGeneric
    * @return
    */
-  public static boolean f7(Pair<?> pair) {
-    return pair.getFirst() == null || pair.getSecond() == null;
+  public static boolean f7(PairGeneric<?> pairGeneric) {
+    return pairGeneric.getFirst() == null || pairGeneric.getSecond() == null;
   }
 
   /** метод демонстрирует механизм захвата подстановки */
-  public static void swap(Pair<?> pair) { // необобщенный метод
-    swapHelper(pair); // захврат подстановки
+  public static void swap(PairGeneric<?> pairGeneric) { // необобщенный метод
+    swapHelper(pairGeneric); // захврат подстановки
   }
 
   /** меняет местами элементы пары */
-  private static <T> void swapHelper(Pair<T> p) { // обобщенный метод
+  private static <T> void swapHelper(PairGeneric<T> p) { // обобщенный метод
     T t = p.getFirst();
     p.setFirst(p.getSecond());
     p.setSecond(t);
