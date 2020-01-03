@@ -8,10 +8,13 @@ import java.io.File
 import java.io.FileInputStream
 import java.io.IOException
 import java.nio.file.Paths
+import java.util.*
 import java.util.stream.Collectors
 import java.io.File.separator as s
 
 object DictionaryMain {
+
+  val r: Random = Random()
 
   @JvmStatic
   fun main(args: Array<String>) {
@@ -21,14 +24,23 @@ object DictionaryMain {
     val sheet = getSheetOfWebResource(path.toFile())
     val table = getTableWithPairsOfWords(sheet)
     table.forEach { pair ->
-        println(pair.component1() + " : " + pair.component2())
+        //println(pair.component1() + " : " + pair.component2())
     }
 
     val list = ArrayList<String>()
     table.map {e -> list.add(e.component1())}
     val englishWords = table.stream().map {it.component1()}.collect(Collectors.toSet())
-   // englishWords.forEach { println(it) }
 
+
+    for (k in 0..10) {
+      val v = table[r.nextInt(table.size)]
+      println(v.component1() + " : " + v.component2())
+    }
+
+    println("enter:")
+    val in2 = Scanner(System.`in`)
+    val v3 = in2.nextInt()
+    println("v3 = $v3")
   }
 }
 
@@ -45,8 +57,7 @@ fun getSheetOfWebResource(excelFile: File): Sheet {
 
 @Throws(IOException::class)
 private fun getWorkBook(excelFile: File): Workbook {
-  FileInputStream(excelFile).use { input ->
-    // try с ресурсами
+  FileInputStream(excelFile).use { input -> // try с ресурсами
     val extension = getExtensionOfFile(excelFile.name)
     return if (extension == "xls") HSSFWorkbook(input) else XSSFWorkbook(input)
   }
