@@ -13,6 +13,11 @@ import java.io.File.separator as s
 
 typealias printWord = (word: Pair<String, String>) -> Unit
 
+/**
+ * Программа загружает словарь из excel-файла, и выводит слова и перевод на консоль.
+ * Возможны два варианта: англо-русский и русско-английский словари. Программа также
+ * подсчитывает процент правильных ответов.
+ */
 object DictionaryMain {
   @JvmStatic
   fun main(args: Array<String>) {
@@ -28,7 +33,7 @@ object DictionaryMain {
     when (result) {
       "y" -> printWordsToConsole(table, { print(it.component1())}, { println(it.component2())}) // англо-русский словарь
       "n" -> printWordsToConsole(table, { print(it.component2())}, { println(it.component1())}) // русско-английский словарь
-      "e" -> System.exit(0)
+      else -> System.exit(0)
     }
   }
 }
@@ -53,7 +58,7 @@ private fun printWordsToConsole(table: List<Pair<String, String>>,
       if (result == "y") success++
       word = table[r.nextInt(table.size)]
       number++
-      println("______________________")
+      println("____________________________________________________")
     }
     newWord = !newWord
   } while (result != "e")
@@ -76,8 +81,7 @@ private fun getExtensionOfFile(fileName: String): String {
 
 private fun getTableWithPairsOfWords(sheet: Sheet): List<Pair<String, String>> {
   val table: MutableList<Pair<String, String>> = ArrayList()
-  // считать все строки листа
-  (0..sheet.lastRowNum).forEach { row ->
+  (0..sheet.lastRowNum).forEach { row -> // считать все строки листа
     val currentRow: Row = sheet.getRow(row)
     val pair = getCurrentLineOfSheet(currentRow)
     table.add(pair)
@@ -85,10 +89,9 @@ private fun getTableWithPairsOfWords(sheet: Sheet): List<Pair<String, String>> {
   return table
 }
 
-// получить отображение с данными текущей строки (row) листа
-// excel-файла, загруженного с web-ресурса. Заголовок (title)
-// - это ассоциативный массив, где в качестве ключа хранятся
-// индексы ячеек, а в качестве значений - их имена.
+// получить отображение с данными текущей строки (row) листа excel-файла,
+// загруженного с web-ресурса. Заголовок (title) - это ассоциативный массив,
+// где в качестве ключа хранятся индексы ячеек, а в качестве значений - их имена.
 private fun getCurrentLineOfSheet(row: Row): Pair<String, String> {
   fun isCellsCorrect(cell0: Cell?, cell1: Cell?): Boolean = (cell0 != null && cell0.toString().isNotEmpty()
           && cell0.toString() != " " && cell1 != null && cell1.toString().isNotEmpty() && cell1.toString() != " ")
