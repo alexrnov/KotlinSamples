@@ -12,21 +12,29 @@ import java.util.*
 import java.io.File.separator as s
 
 typealias printWord = (word: Pair<String, String>) -> Unit
-object DictionaryMain {
 
+object DictionaryMain {
   @JvmStatic
   fun main(args: Array<String>) {
     val path = Paths.get("D:${s}info${s}words.xls")
-    val sheet = getSheetOfWebResource(path.toFile())
+    val sheet = getWorkBook(path.toFile()).getSheetAt(0)
     val table = getTableWithPairsOfWords(sheet)
     //table.forEach { pair -> println(pair.component1() + " : " + pair.component2()) }
     //val englishWords = table.stream().map {it.component1()}.collect(Collectors.toSet())
-    printWordsToConsole(table, { print(it.component1())}, { println(it.component2())})
-    //printWordsToConsole(table, { print(it.component2())}, { println(it.component1())})
+    println("Keys: y - yes; n - no; enter - translate; e - exit")
+    print("Translation from English to Russian? (y/n): ")
+    val scanner = Scanner(System.`in`)
+    val result = scanner.next()
+    when (result) {
+      "y" -> printWordsToConsole(table, { print(it.component1())}, { println(it.component2())}) // англо-русский словарь
+      "n" -> printWordsToConsole(table, { print(it.component2())}, { println(it.component1())}) // русско-английский словарь
+      "e" -> System.exit(0)
+    }
   }
 }
 
-private fun printWordsToConsole(table: List<Pair<String, String>>, f1: printWord, f2: printWord) {
+private fun printWordsToConsole(table: List<Pair<String, String>>,
+                                printWord1: printWord, printWord2: printWord) {
   val r = Random()
   val scanner = Scanner(System.`in`)
   var result: String
@@ -36,31 +44,21 @@ private fun printWordsToConsole(table: List<Pair<String, String>>, f1: printWord
   var word: Pair<String, String> = table[r.nextInt(table.size)]
   do {
     if (newWord) {
-      f1(word)
+      printWord1(word)
       result = scanner.nextLine()
-      newWord = false
     } else {
-      f2(word)
-      println("Success (y/n): ?")
+      printWord2(word)
+      print("Success (y/n)?: ")
       result = scanner.nextLine()
-      if (result == "y") success++ else if (result == "n") success--
+      if (result == "y") success++
       word = table[r.nextInt(table.size)]
-      newWord = true
-      println(success)
+      number++
+      println("______________________")
     }
-    number++
+    newWord = !newWord
   } while (result != "e")
-  println(success)
-}
-/**
- * Получить объект листа excel из файла с минералогическими пробами,
- * загруженного с web-ресурса ИСИХОГИ.
- * [Sheet] - объект листа excel
- */
-private fun getSheetOfWebResource(excelFile: File): Sheet {
-  val workbook = getWorkBook(excelFile)
-  println(workbook.getSheetName(0))
-  return workbook.getSheetAt(0)
+  val percentSuccess: Double = (if (number !=0) Math.round(((success * 100.0) / number) * 100.0) / 100.0 else 0.0)
+  println("percent success: $percentSuccess %")
 }
 
 @Throws(IOException::class)
@@ -92,8 +90,8 @@ private fun getTableWithPairsOfWords(sheet: Sheet): List<Pair<String, String>> {
 // - это ассоциативный массив, где в качестве ключа хранятся
 // индексы ячеек, а в качестве значений - их имена.
 private fun getCurrentLineOfSheet(row: Row): Pair<String, String> {
-  fun isCellsCorrect(cell0: Cell?, cell1: Cell?): Boolean = (cell0 != null && cell0.toString().isNotEmpty() && cell0.toString() != " "
-          && cell1 != null && cell1.toString().isNotEmpty() && cell1.toString() != " ")
+  fun isCellsCorrect(cell0: Cell?, cell1: Cell?): Boolean = (cell0 != null && cell0.toString().isNotEmpty()
+          && cell0.toString() != " " && cell1 != null && cell1.toString().isNotEmpty() && cell1.toString() != " ")
   var pair = Pair("Нет данных", "Нет данных")
   val cell0: Cell? = row.getCell(0)
   val cell1: Cell? = row.getCell(1)
