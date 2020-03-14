@@ -20,7 +20,9 @@ object BreakAndContinueSample {
     println("-----------------")
     returns.break1()
     returns.break2()
-    returns.break3()
+    returns.break4()
+    returns.break5()
+    //returns.break3()
     returns.continue1()
     returns.continue2()
   }
@@ -85,12 +87,12 @@ class ReturnsAndJumps { // пример с continue в цикле, цифра 3 
     // метка указывает, что break нужно производить за пределы
     // первого цикла если метку не ставить, поток будет возвращаться
     // в i = 2, потом i = 3 и т.д.
-    loop@ for (i in 1..100) {
+    find@ for (i in 1..100) {
       for (j in 1..100) {
         println("i = $i j = $j")
         if (j == 5) {
           println("break")
-          break@loop
+          break@find
         }
       }
     }
@@ -100,13 +102,40 @@ class ReturnsAndJumps { // пример с continue в цикле, цифра 3 
   //break в лямбда-выражении
   fun break2() {
     println("break2(): ")
-    run loop@{
-      listOf(1, 2, 3, 4, 5).forEach {
-        if (it == 3) return@loop
+    run find@{
+      listOf(0, 1, 2, 3, 4, 5, 6, 7).forEach {
+        if (it == 5) return@find
         print("$it ")
       }
     }
-    println()
+    println("invoke")
+    println("----------------------")
+  }
+
+  //break в лямбда-выражении
+  fun break4() {
+    println("break4(): ")
+
+    find@for (i in 0..7) {
+      if (i == 5) break@find
+      print("$i ")
+    }
+
+    println("invoke")
+    println("----------------------")
+  }
+
+  //break в лямбда-выражении
+  fun break5() {
+    println("break5(): ")
+
+    run find@{
+      (0..7).forEach {
+        if (it == 5) return@find
+        print("$it ")
+      }
+    }
+    println("invoke")
     println("----------------------")
   }
 
@@ -125,7 +154,7 @@ class ReturnsAndJumps { // пример с continue в цикле, цифра 3 
     println()
     println("----------------------")
     println("continue1(): ")
-    listOf(1, 2, 3, 4, 5).forEach lat@{
+    listOf(1, 2, 3, 4, 5, 6, 7, 8, 9, 10).forEach lat@{
       if (it == 3) return@lat
       print("$it ")
     }
