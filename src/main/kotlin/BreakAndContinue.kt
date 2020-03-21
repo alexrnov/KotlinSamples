@@ -25,6 +25,7 @@ object BreakAndContinueSample {
     //returns.break3()
     returns.continue1()
     returns.continue2()
+    returns.break6()
   }
 }
 
@@ -167,10 +168,20 @@ class ReturnsAndJumps { // пример с continue в цикле, цифра 3 
   fun continue2() {
     println("continue2(): ")
     listOf(1, 2, 3, 4, 5).forEach(fun(value: Int) {
-      if (value == 3) return
-      print("$value ")
+        if (value == 3) return
+        print("$value ")
     })
     println()
     println("----------------------")
+  }
+
+  fun break6() {
+    println("break6: ")
+    listOf("a", "b", "c").forEach find@{ i ->
+        listOf("b", "d").forEach { j ->
+            if (i == j) return@find
+            println("i = $i, j = $j")
+        }
+    }
   }
 }
