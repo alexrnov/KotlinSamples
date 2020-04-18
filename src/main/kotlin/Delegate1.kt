@@ -10,6 +10,7 @@ interface Producer {
 }
 
 class ProducerImpl : Producer {
+  protected var pv: Int = 5
   override var v10: Int = 10
   override var v8 = ClassDelegate1("10")
   override val v1: Int
@@ -25,6 +26,7 @@ class ProducerImpl : Producer {
 }
 
 class EnhancedProducer(private val delegate: Producer) : Producer by delegate {
+  private var superClass: ProducerImpl = delegate as ProducerImpl
 
   // how to share this with delegate
   //private val service = Service()
