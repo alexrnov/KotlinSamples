@@ -37,6 +37,7 @@ object CoroutinesBasicSample {
     }
 
     println("----------------------")
+    println("f(): ")
     // более идиоматическая запись кода выше. Здесь runBlocking <Unit> {...} работает как
     // адаптер, который используется для запуска главной сопрограммы верхнего уровня.
     fun f() = runBlocking<Unit> { // start main coroutine
@@ -62,6 +63,7 @@ object CoroutinesBasicSample {
     // хороший подход. Давайте явно подождем (неблокирующим образом),
     // пока не завершится запущенное нами фоновое задание:
     println("----------------------")
+    println("f2(): ")
     fun f2() = runBlocking<Unit> {
       val job = GlobalScope.launch { // запустить новую сопрограмму и сохранить ссылку на ее работу
         delay(1000L)
@@ -73,5 +75,51 @@ object CoroutinesBasicSample {
     f2()
     // Теперь результат остается прежним, но код основной сопрограммы
     // никак не связан с длительностью фонового задания. Намного лучше.
+    println("--------------------------")
+    println("f3(): ")
+    // функция f3() превращается в сопрограмму с помощью компоновщика
+    // runBlocking. Мы можем запускать сопрограммы в этой области без
+    // явного присоединения к ним, поскольку внешняя сопрограмма (в нашем
+    // примере runBlocking) не завершается, пока не завершатся все сопрограммы,
+    // запущенные в этой области. Таким образом, мы можем упростить наш пример:
+    fun f3() = runBlocking { // this: CoroutineScope
+      launch { // launch a new coroutine in the scope of runBlocking
+        delay(1000L)
+        println("World!")
+      }
+      println("Hello, ")
+    }
+    f3()
+    println("-----------------------")
+
+    // В дополнение к области сопрограмм, предоставляемой различными компоновщиками,
+    // можно объявить собственную область с помощью компоновщика coroutineScope.
+    // Он создает область сопрограммы и не завершается, пока не завершатся все запущенные
+    // дочерние элементы. RunBlocking и coroutineScope могут выглядеть одинаково,
+    // поскольку они оба ждут завершения его тела и всех его потомков. Основное различие между
+    // этими двумя заключается в том, что метод runBlocking блокирует текущий поток для ожидания,
+    // в то время как coroutineScope просто приостанавливает работу, освобождая базовый поток для
+    // других применений. Из-за этой разницы runBlocking является обычной функцией, а coroutineScope - функцией приостановки.
+    println("f4(): ")
+    fun f4() = runBlocking { // this: CoroutineScope
+      launch {
+        delay(2000L)
+        println("Task from runBlocking")
+      }
+
+      coroutineScope { // Creates a coroutine scope
+        launch {
+          delay(3000L)
+          println("Task from nested launch")
+        }
+
+        delay(1000L)
+        println("Task from coroutine scope") // This line will be printed before the nested launch
+      }
+      println("Coroutine scope is over") // This line is not printed until the nested launch completes
+
+    }
+    f4()
+    println("--------------------------")
   }
 }
