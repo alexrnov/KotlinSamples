@@ -28,6 +28,7 @@ object CoroutinesCancellationSamples {
     f1()
     println("-------------")
     println("f2(): ")
+    // прервать задачи, которые выполняются одновременно
     fun f2() = runBlocking {
       val job = launch {
         repeat(10) { i ->
@@ -38,7 +39,7 @@ object CoroutinesCancellationSamples {
           }
         }
       }
-      delay(300L)
+      delay(300L) // если это значение установить > 1000, сопрограммы успеют выполниться
       job.cancelAndJoin()
     }
     f2()
