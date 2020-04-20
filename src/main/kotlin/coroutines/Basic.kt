@@ -139,6 +139,9 @@ object CoroutinesBasicSample {
     f5()
     println("----------------------------")
     println("f6(): ")
+    // запускает 100K сопрограмм, и через секунду каждая сопрограмма печатает
+    // точку. Теперь попробуйте это с потоками. Что случилось бы? (Скорее всего,
+    // ваш код выдаст ошибку нехватки памяти)
     fun f6() = runBlocking {
       repeat(100_000) { // одновременно запустить 100_000 сопрограмм
         launch {
@@ -148,6 +151,21 @@ object CoroutinesBasicSample {
       }
     }
     f6()
+    println("--------------------")
+    println("f7(): ")
+    // Следующий код запускает долго выполняющуюся сопрограмму в GlobalScope,
+    // которая печатает «Я сплю» дважды в секунду, а затем через некоторое время
+    // возвращается из основной функции:
+    fun f7() = runBlocking {
+      GlobalScope.launch {
+        repeat(1000) { i ->
+          println("I'm sleeping $i ... ")
+          delay(500L)
+        }
+      }
+      delay(1300L) // просто уйти после задержки
+    }
+    f7()
   }
 
   private suspend fun doWorld() {
@@ -156,3 +174,4 @@ object CoroutinesBasicSample {
     println("World!")
   }
 }
+
