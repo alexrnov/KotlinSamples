@@ -13,7 +13,7 @@ object CoroutinesCancellationSamples {
     // использовать для отмены запущенной сопрограммы:
     fun f1() = runBlocking {
       val job = launch {
-        repeat(1000) { i ->
+        repeat(1000) { i -> // по очереди запустить
           println("job: I'm sleeping $i ...")
           delay(500L)
         }
@@ -27,15 +27,22 @@ object CoroutinesCancellationSamples {
     }
     f1()
     println("-------------")
-
+    println("f2(): ")
     fun f2() = runBlocking {
-      repeat(1000) { // одновременно запустить 100_000 сопрограмм
-        launch {
-          delay(1000L)
-          println(".")
+      val job = launch {
+        repeat(10) { i ->
+          // одновременно запустить 10 сопрограмм
+          launch {
+            delay(1000L)
+            println("$i")
+          }
         }
       }
+      delay(300L)
+      job.cancelAndJoin()
     }
     f2()
+    println("----------------")
+
   }
 }
