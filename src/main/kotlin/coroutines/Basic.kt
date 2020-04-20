@@ -5,6 +5,7 @@ import kotlin.concurrent.thread
 object CoroutinesBasicSample {
   @JvmStatic
   fun main(args: Array<String>) {
+    println("id1 = " + Thread.currentThread().name)
     GlobalScope.launch { // запустить новую сопрограмму в фоновом режиме и продолжить
       // неблокирующая задержка на 1 секунду (единица времени по умолчанию - мс)
       // не блокирует поток а приостанавливает сопрограмму
@@ -104,20 +105,19 @@ object CoroutinesBasicSample {
     fun f4() = runBlocking { // this: CoroutineScope
       launch {
         delay(2000L)
-        println("Task from runBlocking")
+        println("Task from runBlocking; key = ${CoroutineName.Key}")
       }
 
       coroutineScope { // Creates a coroutine scope
         launch {
           delay(3000L)
-          println("Task from nested launch")
+          println("Task from nested launch: key = ${CoroutineName.Key}")
         }
 
         delay(1000L)
-        println("Task from coroutine scope") // This line will be printed before the nested launch
+        println("Task from coroutine scope: key = ${CoroutineName.Key}") // This line will be printed before the nested launch
       }
-      println("Coroutine scope is over") // This line is not printed until the nested launch completes
-
+      println("Coroutine scope is over: key = ${CoroutineName.Key}") // This line is not printed until the nested launch completes
     }
     f4()
     println("--------------------------")
@@ -129,13 +129,29 @@ object CoroutinesBasicSample {
     // например, задержку в этом примере, чтобы приостановить выполнение сопрограммы.
     println("f5(): ")
     fun f5() = runBlocking {
-      launch { doWorld() }
+      println("currentThread3 = key = ${CoroutineName.Key}")
+      launch {
+        println("currentThread1 = key = ${CoroutineName.Key}")
+        doWorld()
+      }
       println("Hello, ")
     }
     f5()
+    println("----------------------------")
+    println("f6(): ")
+    fun f6() = runBlocking {
+      repeat(100_000) { // одновременно запустить 100_000 сопрограмм
+        launch {
+          delay(1000L)
+          println(".")
+        }
+      }
+    }
+    f6()
   }
 
   private suspend fun doWorld() {
+    println("currentThread2 = key = ${CoroutineName.Key}")
     delay(2000L)
     println("World!")
   }
