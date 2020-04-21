@@ -60,6 +60,23 @@ object SuspendingSamples {
     }
     f3()
     println("--------------------")
+    // Этот стиль программирования с асинхронными функциями представлен
+    // здесь только для иллюстрации, потому что это популярный стиль в других
+    // языках программирования. Использование этого стиля с сопрограммами Kotlin
+    // настоятельно не рекомендуется
+    println("async fun:")
+    val time = measureTimeMillis {
+      // мы можем инициировать асинхронные действия вне сопрограммы
+      val one = somethingUsefulOneAsync()
+      val two = somethingUsefulTwoAsync()
+      // но ожидание результата должно включать либо приостановку, либо блокировку.
+      // здесь мы используем `runBlocking {...}`, чтобы заблокировать основной поток в ожидании результата
+      runBlocking {
+        println("The answer is ${one.await() + two.await()}")
+      }
+    }
+    println("time = $time")
+    println("--------------------")
 
   }
 
@@ -84,11 +101,11 @@ object SuspendingSamples {
   // откуда угодно. Однако их использование всегда подразумевает асинхронное
   // (здесь означает одновременное) выполнение их действия с вызывающим кодом.
   // The result type of somethingUsefulOneAsync is Deferred<Int>
-  fun somethingUsefulOneAsync() = GlobalScope.async {
+  private fun somethingUsefulOneAsync() = GlobalScope.async {
     doSomethingUsefulOne()
   }
   // The result type of somethingUsefulOneAsync is Deferred<Int>
-  fun somethingUsefulTwoAsync() = GlobalScope.async {
+  private fun somethingUsefulTwoAsync() = GlobalScope.async {
     doSomethingUsefulTwo()
   }
 
