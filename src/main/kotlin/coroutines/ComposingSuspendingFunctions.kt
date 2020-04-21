@@ -1,9 +1,6 @@
 package coroutines
 
-import kotlinx.coroutines.cancelAndJoin
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.*
 import kotlin.system.measureTimeMillis
 
 // В этом разделе рассматриваются различные подходы
@@ -22,22 +19,77 @@ object SuspendingSamples {
     // измерить общее время, необходимое для выполнения обеих функций приостановки:
     fun f1() = runBlocking {
       val time = measureTimeMillis {
-        val one = doSomethingUserfulOne()
+        val one = doSomethingUsefulOne()
         val two = doSomethingUsefulTwo()
         println("The answer is ${one + two}")
       }
       println("time = $time")
     }
     f1()
+    println("-----------------------")
+    // Концептуально, async - это как launch. Он запускает отдельную сопрограмму,
+    // которая представляет собой легкую нить, которая работает одновременно со
+    // всеми остальными сопрограммами. Разница в том, что запуск возвращает
+    // задание и не несет никакого результирующего значения, в то время как async
+    // возвращает отложенное - легкое неблокирующее будущее, которое представляет
+    // собой обещание предоставить результат позже.
+    println("f2(): ")
+    fun f2() = runBlocking {
+      val time = measureTimeMillis {
+        val one = async { doSomethingUsefulOne() }
+        val two = async { doSomethingUsefulTwo() }
+        // await() возвращает результат асинхронной задачи
+        println("The answer is ${one.await() + two.await()}")
+      }
+      println("time = $time")
+    }
+    f2()
+    println("--------------")
+    // В этом режиме он запускает сопрограмму только тогда, когда его результат
+    // требуется await или если вызывается функция запуска его задания.
+    println("f3(): ")
+    fun f3() = runBlocking {
+      val time = measureTimeMillis {
+        val one = async(start = CoroutineStart.LAZY) { doSomethingUsefulOne() }
+        val two = async(start = CoroutineStart.LAZY) { doSomethingUsefulTwo() }
+        one.start()
+        two.start()
+        println("The answer is ${one.await() + two.await()}")
+      }
+      println("time = $time")
+    }
+    f3()
+    println("--------------------")
+
   }
 
-  suspend fun doSomethingUserfulOne(): Int {
+  private suspend fun doSomethingUsefulOne(): Int {
     delay(1000) // сделаем вид, что мы делаем что-то полезное здесь
     return 13
   }
 
-  suspend fun doSomethingUsefulTwo(): Int {
+  private suspend fun doSomethingUsefulTwo(): Int {
     delay(1300) // сделаем вид, что мы делаем что-то полезное здесь тоже
     return 29
   }
+
+
+  // Асинхронные функции. Мы можем определить асинхронные функции в стиле,
+  // которые вызывают асинхронно doSomethingUsefulOne и doSomethingUsefulTwo,
+  // используя асинхронный конструктор сопрограмм с явной ссылкой GlobalScope.
+  // Мы называем такие функции суффиксом «… Async», чтобы подчеркнуть тот факт,
+  // что они только запускают асинхронные вычисления, и для получения результата
+  // необходимо использовать полученное отложенное значение. Обратите внимание,
+  // что эти функции xxxAsync не являются функциями приостановки. Их можно использовать
+  // откуда угодно. Однако их использование всегда подразумевает асинхронное
+  // (здесь означает одновременное) выполнение их действия с вызывающим кодом.
+  // The result type of somethingUsefulOneAsync is Deferred<Int>
+  fun somethingUsefulOneAsync() = GlobalScope.async {
+    doSomethingUsefulOne()
+  }
+  // The result type of somethingUsefulOneAsync is Deferred<Int>
+  fun somethingUsefulTwoAsync() = GlobalScope.async {
+    doSomethingUsefulTwo()
+  }
+
 }
