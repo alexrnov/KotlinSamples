@@ -84,23 +84,38 @@ object ContextSamples {
     f2()
     println("---------------------")
     println("f3(): ")
-    fun f3() = runBlocking<Unit> {
+    fun f3() = runBlocking {
       val a = async {
-        log("Я вычисляю часть ответа")
-        6
+        log("one")
+        2
       }
       val b = async {
-        log("Я вычисляю другую часть ответа")
-        7
+        log("two")
+        5
       }
       log("The answer is ${a.await() * b.await()}")
     }
     f3()
     println("-------------------------")
+    println("f4(): ")
+    // Это демонстрирует несколько новых методов. Один использует runBlocking
+    // с явно заданным контекстом, а другой использует функцию withContext, чтобы
+    // изменить контекст сопрограммы, оставаясь в той же подпрограмме.
+    // Обратите внимание, что в этом примере также используется функция use из
+    // стандартной библиотеки Kotlin для освобождения потоков, созданных
+    // с помощью newSingleThreadContext, когда они больше не нужны.
+    newSingleThreadContext("Ctx1").use { ctx1 ->
+      newSingleThreadContext("Ctx2").use { ctx2 ->
+        runBlocking(ctx1) {
+          log("Started in ctx1")
+          withContext(ctx2) {
+            log("Working in ctx2")
+          }
+          log("Back to ctx1")
+        }
+      }
+    }
   }
-
-
-
 }
 
 fun log(msg: String) = println("[${Thread.currentThread().name}] $msg")
