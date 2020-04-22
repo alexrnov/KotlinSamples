@@ -78,6 +78,45 @@ object SuspendingSamples {
     println("time = $time")
     println("--------------------")
 
+
+    fun f4() = runBlocking {
+
+      val a = async(start = CoroutineStart.LAZY) {
+        // delay(200L)
+        println("A1")
+      }
+
+      val b = async(start = CoroutineStart.LAZY) {
+        // delay(200L)
+        println("A2")
+      }
+
+      b.await()
+      println("A3")
+      a.await()
+    }
+
+    f4()
+    println("-----------------------")
+    fun f5() = runBlocking {
+
+      val a = async {
+        delay(200L)
+        println("A1")
+      }
+
+      val b = async {
+        delay(200L)
+        println("A2")
+      }
+
+      b.await()
+      a.await()
+      println("A3")
+
+    }
+
+    f5()
   }
 
   private suspend fun doSomethingUsefulOne(): Int {
@@ -107,6 +146,10 @@ object SuspendingSamples {
   // The result type of somethingUsefulOneAsync is Deferred<Int>
   private fun somethingUsefulTwoAsync() = GlobalScope.async {
     doSomethingUsefulTwo()
+  }
+
+  fun f100(): Int {
+    return 15
   }
 
 }
