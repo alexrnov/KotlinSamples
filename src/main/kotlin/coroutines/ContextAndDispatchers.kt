@@ -3,13 +3,14 @@ package coroutines
 
 import kotlinx.coroutines.*
 
-const val DEBUG_PROPERTY_NAME: String = "-ea"
 // Сопрограммы всегда выполняются в некотором контексте, представленном
 // значением типа CoroutineContext, определенного в стандартной библиотеке
 // Kotlin. Контекст сопрограммы представляет собой набор различных элементов.
 // Основными элементами являются Job сопрограммы, которую мы видели ранее,
 // и ее диспетчер, который рассматривается в этом разделе.
 object ContextSamples {
+
+
   @JvmStatic
   fun main(args: Array<String>) {
     println("f1(): ")
@@ -115,7 +116,75 @@ object ContextSamples {
         }
       }
     }
+
+    println("---------------")
+    println("f5(): ")
+    // выведет My job is BlockingCoroutine{Active}@5bb21b69
+    // {Active} значит active = true
+    fun f5() = runBlocking {
+      println("My job is ${coroutineContext[Job]}")
+    }
+    f5()
+    println("--------------")
+    println("f6(): ")
+    // Дети сопрограммы. Когда сопрограмма запускается в CoroutineScope другой
+    // сопрограммы, она наследует свой контекст через CoroutineScope.coroutineContext,
+    // и задание новой сопрограммы становится дочерним по отношению к заданию
+    // родительской сопрограммы. Когда родительская сопрограмма отменяется,
+    // все ее дочерние элементы также рекурсивно удаляются. Однако, когда GlobalScope
+    // используется для запуска сопрограммы, родительский элемент для задания новой
+    // сопрограммы отсутствует. Поэтому он не привязан к области действия, из которого
+    // был запущен, и работает независимо.
+    fun f6() = runBlocking {
+      val request = launch {
+        // it spawns two other jobs, one with GlobalScope
+        // он порождает две работы, одна с GlobalScope
+        GlobalScope.launch {
+          println("job1: I run in GlobalScope and execute independently!")
+          delay(1000)
+          println("job1: I am not affected by cancellation of the request")
+        }
+        // and the other inherits the parent context
+        // а другая наследует родительский контекст
+        launch {
+          delay(100)
+          println("job2: I am a child of the request coroutine")
+          delay(1000)
+          println("job2: I will not execute this line if my parent request is cancelled")
+        }
+      }
+      delay(500)
+      request.cancel() // cancel processing of the request
+      // delay a second to see what happens
+      // задержаться на секунду, чтобы увидеть, что происходит
+      delay(1000)
+      // Кто пережил отмену запроса
+      println("main: Who has survived request cancellation?")
+    }
+    f6()
+    println("-------------------------")
+    println("f7():")
+    // Родительские обязанности. Родительская сопрограмма всегда ждет завершения
+    // всех своих детей. Родителю не нужно явно отслеживать все дочерние элементы,
+    // которые он запускает, и ему не нужно использовать Job.join, чтобы ждать их в конце:
+    fun f7() = runBlocking {
+      // запустить сопрограмму для обработки какого-либо входящего запроса
+      val request = launch {
+        repeat(3) { i -> // launch a few children jobs
+          launch {
+            delay((i + 1) * 200L)
+            println("Coroutine $i is done")
+          }
+        }
+        println("request: Я закончил, и я явно не присоединяюсь к своим детям, которые все еще активны")
+      }
+      request.join() // wait for completion of the request, including all its children
+      println("Now processing of the request is complete")
+    }
+    f7()
+    println("---------------------------")
   }
+
 }
 
 fun log(msg: String) = println("[${Thread.currentThread().name}] $msg")

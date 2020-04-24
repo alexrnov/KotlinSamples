@@ -166,6 +166,25 @@ object CoroutinesBasicSample {
       delay(1300L) // просто уйти после задержки
     }
     f7()
+    println("----------------------")
+    println("f8(): ")
+    fun f8() = runBlocking {
+      val a = async {
+        delay(500L)
+        println("A1")
+      }
+
+      val b = async {
+        delay(200L)
+        println("A2")
+      }
+
+
+      b.await()
+
+      println("A3")
+    }
+    f8()
   }
 
   private suspend fun doWorld() {
