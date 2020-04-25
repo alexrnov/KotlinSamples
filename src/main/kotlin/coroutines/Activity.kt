@@ -7,6 +7,10 @@ package coroutines
 import kotlin.coroutines.*
 import kotlinx.coroutines.*
 
+// Мы можем реализовать интерфейс CoroutineScope в этом классе Activity.
+// Лучший способ сделать это - использовать делегирование с заводскими функциями
+// по умолчанию. Мы также можем объединить требуемый диспетчер (в этом примере
+// мы использовали Dispatchers.Default) с областью действия:
 class Activity : CoroutineScope by CoroutineScope(Dispatchers.Default) {
 
   fun destroy() {
@@ -15,6 +19,9 @@ class Activity : CoroutineScope by CoroutineScope(Dispatchers.Default) {
   // to be continued ...
 
   // class Activity continues
+  // Теперь мы можем запускать сопрограммы в рамках этого действия без
+  // необходимости явно указывать их контекст. Для демонстрации мы
+  // запускаем десять сопрограмм, которые задерживаются на другое время:
   fun doSomething() {
     // launch ten coroutines for a demo, each working for a different time
     repeat(10) { i ->
