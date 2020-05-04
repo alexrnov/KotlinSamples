@@ -249,26 +249,30 @@ object ContextSamples {
     // если это будет сделано вручную.
     println("f10(): ")
     // Для ThreadLocal здесь используется функция расширения asContextElement.
-    // Он создает дополнительный элемент контекста, который сохраняет значение
+    // Она создает дополнительный элемент контекста, который сохраняет значение
     // заданного ThreadLocal и восстанавливает его каждый раз, когда сопрограмма
     // переключает свой контекст.
     fun f10() = runBlocking {
       threadLocal.set("main")
       //current thread: Thread[main,5,main],
+      // локальное значение по умолчанию
       println("Pre-main, current thread: ${Thread.currentThread()}, thread local value: '${threadLocal.get()}'")
       val job = launch(Dispatchers.Default + threadLocal.asContextElement(value = "launch")) {
         // current thread: Thread[DefaultDispatcher-worker-3,5,main]
+        // будет изменено локальное значение
         println("Launch start, current thread: ${Thread.currentThread()}, thread local value: '${threadLocal.get()}'")
         // по сути: yield () в основном означает, что поток не выполняет ничего важного,
         // и если нужно запустить другие потоки, они могут работать. какой бы поток вы
         // не вызывали yield, он будет перенесен в конец очереди сообщений, тогда другие
         // потоки с таким же приоритетом будут выполняться раньше него.
         yield()
+        // изменение локального значения будет востановлено
         // current thread: Thread[DefaultDispatcher-worker-2,5,main]
         println("After yield, current thread: ${Thread.currentThread()}, thread local value: '${threadLocal.get()}'")
         }
       job.join()
       // current thread: Thread[main,5,main]
+      // локальное значение вернется к первоначальному
       println("Post-main, current thread: ${Thread.currentThread()}, thread local value: '${threadLocal.get()}'")
     }
     f10()
