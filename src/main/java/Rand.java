@@ -2,6 +2,9 @@ import java.util.Random;
 
 public class Rand {
   public static void main(String[] args) {
+    String s = "edsfsd" + "fdf"
+                    + "dsffsd";
+
     Random r = new Random();
     int i = 0;
     for (int k = 0; k < 20; k++) {
