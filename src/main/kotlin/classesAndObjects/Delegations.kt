@@ -6,102 +6,7 @@ import kotlin.properties.ReadOnlyProperty
 import kotlin.properties.ReadWriteProperty
 import kotlin.reflect.KProperty
 
-object DelegationsSamples {
 
-  @JvmStatic
-  fun main(args: Array<String>) {
-    /**
-     * Паттерн делегирования доказал, что является хорошей альтернативой
-     * наследованию реализации, и Kotlin поддерживает его, изначально не
-     * требуя написания специального кода.
-     */
-    println("Делегирование класса: ")
-    val baseClass1 = BaseClass1(10)
-    val d1 = Derived1(baseClass1)
-    d1.print1()
-    d1.print2()
-    println("value = " + d1.value)
-    println("------------------------------------")
-    println("Переопределение метода из делегированного класса: ")
-    val baseClass2 = BaseClass2(10)
-    val d2 = Derived2(baseClass2)
-    d2.print1()
-    d2.print2()
-    println("value = " + d2.value)
-    println("------------------------------------")
-    /**
-     * Есть определенные общие виды свойств, которые, хотя мы
-     * можем реализовать их вручную каждый раз, когда нам они нужны,
-     * было бы очень приятно реализовать раз и навсегда, и поместить в
-     * библиотеку (например, ленивые свойства: значение вычисляется
-     * только при первом доступе; наблюдаемые свойства: прослушиватели
-     * получают уведомления об изменениях в этом свойстве; сохранение
-     * свойств в отображении вместо отдельного поля для каждого свойства.
-     */
-    println("Делегируемое свойство: ")
-    val properties = DelegateProperty()
-    println(properties.p)
-    println("-")
-    properties.p = "10"
-    println(properties.p)
-    println("------------------------------------")
-    /**
-     * Стандартная библиотека Kotlin обеспечивает фабрику методов для
-     * нескольких полезных видов делегирования, представленных ниже
-     */
-    // первый вызов метода get() в lazy-свойстве, передает лямда-выражение
-    // на выполнение и запоминает результат, последующие вызовы
-    // свойства просто возвращают запомненный результат. Лямбда свойства
-    // имеют отложенное выполнение
-    println("Lazy-свойства: ")
-    val s = lazyValue
-    println("s = $s")
-    println("------------------------------------")
-    println("Наблюдатели: ")
-    val user = User()
-    user.name = "first" // observable
-    user.name = "second"
-    println("-")
-    user.name2 = "text1" // vetoable
-    println(user.name2) // значение станет text1
-    user.name2 = "" // пустое значение не будет присвоено
-    println(user.name2) // значение останется text1
-    println("------------------------------------")
-    println("Хранение свойств в карте: ")
-    // Для свойств val используется Map, для var - MutableMap
-    val user2 = User2(mapOf("name" to "John", "age" to 30),
-            mutableMapOf("address" to "city, street, house", "account" to 5000L))
-    println("user2.name = ${user2.name}")
-    println("user2.age = ${user2.age}")
-    println("user2.address = ${user2.address}")
-    println("user2.account = ${user2.account}")
-    println("------------------------------------")
-    println("Локальные делегируемые свойства: ")
-    f1(lambda1)
-    println("-")
-    f1(lambda2)
-    println("------------------------------------")
-    println("Реализация стандартного интерфейса Kotlin с обобщенными типами: ")
-    val properties2 = DelegateProperty2()
-    println(properties2.v1)
-    println("-")
-    println(properties2.v2)
-    println("-")
-    properties2.v2 = "change parameter"
-    println("-")
-    println(properties2.v2)
-    println("------------------------------------")
-    /**
-     * Метод provideDelegate() используется для того, чтобы перехватить
-     * значение до того, как оно было вызвано в методе getValue(), т.е.
-     * перед связыванием имени свойства и его значением
-     */
-    println("provideDelegate(): ")
-    val myUI = MyUI()
-    myUI.image
-    myUI.text
-  }
-}
 
 
 val lazyValue: String by lazy {
@@ -310,12 +215,99 @@ class MyUI {
 class ResourceID<T>(val t: T)
 
 
+object DelegationsSamples {
 
-
-
-
-
-
-
-
+  @JvmStatic fun main(args: Array<String>) {
+    /**
+     * Паттерн делегирования доказал, что является хорошей альтернативой
+     * наследованию реализации, и Kotlin поддерживает его, изначально не
+     * требуя написания специального кода.
+     */
+    println("Делегирование класса: ")
+    val baseClass1 = BaseClass1(10)
+    val d1 = Derived1(baseClass1)
+    d1.print1()
+    d1.print2()
+    println("value = " + d1.value)
+    println("------------------------------------")
+    println("Переопределение метода из делегированного класса: ")
+    val baseClass2 = BaseClass2(10)
+    val d2 = Derived2(baseClass2)
+    d2.print1()
+    d2.print2()
+    println("value = " + d2.value)
+    println("------------------------------------")
+    /**
+     * Есть определенные общие виды свойств, которые, хотя мы
+     * можем реализовать их вручную каждый раз, когда нам они нужны,
+     * было бы очень приятно реализовать раз и навсегда, и поместить в
+     * библиотеку (например, ленивые свойства: значение вычисляется
+     * только при первом доступе; наблюдаемые свойства: прослушиватели
+     * получают уведомления об изменениях в этом свойстве; сохранение
+     * свойств в отображении вместо отдельного поля для каждого свойства.
+     */
+    println("Делегируемое свойство: ")
+    val properties = DelegateProperty()
+    println(properties.p)
+    println("-")
+    properties.p = "10"
+    println(properties.p)
+    println("------------------------------------")
+    /**
+     * Стандартная библиотека Kotlin обеспечивает фабрику методов для
+     * нескольких полезных видов делегирования, представленных ниже
+     */
+    // первый вызов метода get() в lazy-свойстве, передает лямда-выражение
+    // на выполнение и запоминает результат, последующие вызовы
+    // свойства просто возвращают запомненный результат. Лямбда свойства
+    // имеют отложенное выполнение
+    println("Lazy-свойства: ")
+    val s = lazyValue
+    println("s = $s")
+    println("------------------------------------")
+    println("Наблюдатели: ")
+    val user = User()
+    user.name = "first" // observable
+    user.name = "second"
+    println("-")
+    user.name2 = "text1" // vetoable
+    println(user.name2) // значение станет text1
+    user.name2 = "" // пустое значение не будет присвоено
+    println(user.name2) // значение останется text1
+    println("------------------------------------")
+    println("Хранение свойств в карте: ")
+    // Для свойств val используется Map, для var - MutableMap
+    val user2 = User2(mapOf("name" to "John", "age" to 30),
+            mutableMapOf("address" to "city, street, house", "account" to 5000L))
+    println("user2.name = ${user2.name}")
+    println("user2.age = ${user2.age}")
+    println("user2.address = ${user2.address}")
+    println("user2.account = ${user2.account}")
+    println("------------------------------------")
+    println("Локальные делегируемые свойства: ")
+    f1(lambda1)
+    println("-")
+    f1(lambda2)
+    println("------------------------------------")
+    println("Реализация стандартного интерфейса Kotlin с обобщенными типами: ")
+    val properties2 = DelegateProperty2()
+    println(properties2.v1)
+    println("-")
+    println(properties2.v2)
+    println("-")
+    properties2.v2 = "change parameter"
+    println("-")
+    println(properties2.v2)
+    println("------------------------------------")
+    /**
+     * Метод provideDelegate() используется для того, чтобы перехватить
+     * значение до того, как оно было вызвано в методе getValue(), т.е.
+     * перед связыванием имени свойства и его значением
+     */
+    println("provideDelegate(): ")
+    val myUI = MyUI()
+    myUI.image
+    myUI.text
+  }
+}
 

@@ -23,6 +23,7 @@ object IdiomsSamples {
     manyParams()
     booleanEquals()
     invokeFunctionInInsertedClass()
+    arrayFun()
   }
 }
 
@@ -256,6 +257,21 @@ private fun invokeFunctionInInsertedClass() {
   idiomsClass.f5()
   println("------------------------")
 }
+
+private fun arrayFun() {
+  fun array(arr1: IntArray, arr2: IntArray, arr3: IntArray) {
+    arr1[0] = 1
+    arr2[1] = 2
+    arr3[2] = 3
+  }
+  val lengthBuf = IntArray(3)
+  array(lengthBuf, lengthBuf, lengthBuf)
+  println(lengthBuf[0])
+  println(lengthBuf[1])
+  println(lengthBuf[2])
+
+}
+
 
 /**
  * DTOs (POJOs/POCOs). Класс данных. Обеспечивает следующую

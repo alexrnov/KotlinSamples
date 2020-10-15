@@ -6,6 +6,15 @@ object DestructuringDeclarationsSamples {
   fun main(args: Array<String>) {
     sample()
     returningTwoValuesFromFunction()
+    //val person = Person2("jon", 15, true)
+
+    val person = Person2("Adam").apply {
+      age = 30 // тоже самое, что и this.age = 30
+      code = true
+    }
+    println("person = ${person.age} + ${person.code} + ${person.name}")
+    person.run { name = "Name2"; age = 40; code = false }
+    println("person = ${person.age} + ${person.code} + ${person.name}")
   }
 
   private fun sample() {
@@ -23,6 +32,8 @@ object DestructuringDeclarationsSamples {
             Person("jim", 45, false))
     for ((name2, age2) in list) { println("name2 = $name2, age2 = $age2") }
     println("----------------------")
+
+
   }
 
   private fun returningTwoValuesFromFunction() {
@@ -41,4 +52,9 @@ object DestructuringDeclarationsSamples {
   }
 }
 
-data class Person(val name: String, val age: Int, val code: Boolean)
+data class Person(val name: String, var age: Int, var code: Boolean)
+
+class Person2(var name: String, var age: Int = 0, var code: Boolean = false) {
+
+
+}
